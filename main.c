@@ -12,6 +12,7 @@ int** getBoardOfMatches(int row, int column);
 
 void checkPawnMoves(int** board);
 void checkKingMoves(int** board);
+void checkBishopMoves(int** board);
 
 cvector_vector_type(char*) solutionsVector = NULL;
 
@@ -144,6 +145,43 @@ int main()
     // TODO: Free everything here.
     return 0;
 
+}
+// TODO: Instead of iterating thru all elements for each character, go thru only once, and provide functions the table, and initial functions.
+
+void checkBishopMoves(int** board) {
+
+    for (int i = 0; i < 8; i++) {
+        for (int k = 0; k < 8; k++) {
+            if (board[i][k] == 4) {
+                for (int j = 0; j < 7 - k; j++) {
+                    if (board[i + 1][k + 1] == 0) {
+                        cvector_push_back(solutionsVector, convertToNotationCode(i + 1, k + 1, 'B'));
+                    } else if (board[i + 1][k + 1] > 7) {
+                        // TODO: Add + sign to notation code
+                        cvector_push_back(solutionsVector, convertToNotationCode(i + 1, k + 1, 'B'));
+                        break;
+                    } else if (board[i + 1][k + 1] < 7) {
+                        cvector_push_back(solutionsVector, convertToNotationCode(i + 1, k + 1, 'B'));
+                        break;
+                    }
+
+                    if (board[i + 1][k - 1] == 0) {
+                        cvector_push_back(solutionsVector, convertToNotationCode(i + 1, k - 1, 'B'));
+                        break;
+                    } else if (board[i + 1][k + 1] > 7) {
+                        cvector_push_back(solutionsVector, convertToNotationCode(i + 1, k + 1, 'B'));
+                        break;
+                    } else if (board[i - 1][k + 1] < 7) {
+                        cvector_push_back(solutionsVector, convertToNotationCode(i - 1, k + 1, 'B'));
+                        break;
+                    } else if (board[i - 1][k - 1] < 7) {
+                        cvector_push_back(solutionsVector, convertToNotationCode(i - 1, k - 1, 'B'));
+                        break;
+                    }
+                }
+            }
+        }
+    }
 }
 
 void checkKingMoves(int** board) {
