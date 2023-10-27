@@ -185,6 +185,64 @@ void checkKingMoves(int** board) {
                                 cvector_push_back(solutionsVector, convertToNotationCode(i + 1, k - 1, 'K'));
                             }
 
+                        } else if (k == 0 && i == 0) {
+
+                            if (board[i + 1][k + 1] == 0 || board[i + 1][k + 1] > 7) {
+                                cvector_push_back(solutionsVector, convertToNotationCode(i + 1, k + 1, 'K'));
+                            }
+
+                            if (board[i][k + 1] == 0 || board[i][k + 1] > 7) {
+                                cvector_push_back(solutionsVector, convertToNotationCode(i, k + 1, 'K'));
+                            }
+
+                            if (board[i + 1][k] == 0 || board[i + 1][k] > 7) {
+                                cvector_push_back(solutionsVector, convertToNotationCode(i + 1, k, 'K'));
+                            }
+
+
+                        } else if (k == 0 && i == 7) {
+
+                            if (board[i - 1][k + 1] == 0 || board[i - 1][k + 1] > 7) {
+                                cvector_push_back(solutionsVector, convertToNotationCode(i - 1, k + 1, 'K'));
+                            }
+
+                            if (board[i][k + 1] == 0 || board[i][k + 1] > 7) {
+                                cvector_push_back(solutionsVector, convertToNotationCode(i, k + 1, 'K'));
+                            }
+
+                            if (board[i - 1][k] == 0 || board[i - 1][k] > 7) {
+                                cvector_push_back(solutionsVector, convertToNotationCode(i - 1, k, 'K'));
+                            }
+
+
+                        } else if (k == 7 && i == 0) {
+
+                            if (board[i + 1][k - 1] == 0 || board[i + 1][k - 1] > 7) {
+                                cvector_push_back(solutionsVector, convertToNotationCode(i + 1, k - 1, 'K'));
+                            }
+
+                            if (board[i][k - 1] == 0 || board[i][k - 1] > 7) {
+                                cvector_push_back(solutionsVector, convertToNotationCode(i, k - 1, 'K'));
+                            }
+
+                            if (board[i + 1][k] == 0 || board[i + 1][k] > 7) {
+                                cvector_push_back(solutionsVector, convertToNotationCode(i + 1, k, 'K'));
+                            }
+
+                        } else if (i == 7 && k == 7) {
+
+                            if (board[i - 1][k - 1] == 0 || board[i - 1][k - 1] > 7) {
+                                cvector_push_back(solutionsVector, convertToNotationCode(i - 1, k - 1, 'K'));
+                            }
+
+                            if (board[i][k - 1] == 0 || board[i][k - 1] > 7) {
+                                cvector_push_back(solutionsVector, convertToNotationCode(i, k - 1, 'K'));
+                            }
+
+                            if (board[i - 1][k] == 0 || board[i + 1][k] > 7) {
+                                cvector_push_back(solutionsVector, convertToNotationCode(i - 1, k, 'K'));
+                            }
+
                         } else if (k == 0) {
                             if (board[i + 1][k] == 0 || board[i + 1][k] > 7) {
                                 cvector_push_back(solutionsVector, convertToNotationCode(i + 1, k, 'K'));
@@ -206,7 +264,6 @@ void checkKingMoves(int** board) {
                                 cvector_push_back(solutionsVector, convertToNotationCode(i + 1, k - 1, 'K'));
                             }
 
-                        // Here we can only check the left side.
                         } else if (k == 7) {
                             if (board[i - 1][k] == 0 || board[i - 1][k] > 7) {
                                 cvector_push_back(solutionsVector, convertToNotationCode(i - 1, k, 'K'));
