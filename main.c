@@ -135,9 +135,27 @@ int main()
         token = strtok(NULL, s);
    }
 
-    printf("Solutions: \n");
-    checkPawnMoves(boardOfMatches);
-    checkKingMoves(boardOfMatches);
+    for (int i = 0; i < 8; i++) {
+        for (int k = 0; k < 8; k++) {
+            switch (boardOfMatches[i][k]) {
+                case 7:
+                    // checkPawnMoves(boardOfMatches);
+                    break;
+                case 6:
+                    checkKingMoves(i, k, boardOfMatches);
+                    break;
+                case 5:
+                    break;
+                case 4:
+                    // checkBishopMoves(boardOfMatches);
+                    break;
+            case 3:
+                break;
+            case 2:
+                break;
+            }
+        }
+    }
 
     for(int i=0; i<8; i++) {
         for(int j=0;j<8;j++) {
