@@ -557,11 +557,16 @@ void checkPawnMoves(int** board) {
                     }
                 }
 
-            }
-        }
+
     }
 }
 
+/**
+ * Creates, and allocates a 2d multidimensional array achieved thru the use of pointers.
+ * @param The amount of rows.
+ * @param The amount of columns.
+ * @return The pointer for the 2d multidimensional array.
+ */
 int** getBoardOfMatches(int row, int column) {
     int **temp;
     int j;
@@ -576,8 +581,13 @@ int** getBoardOfMatches(int row, int column) {
     return temp;
 }
 
-// Converts two array indexes and a given char into an algebrathic notation code
-// For as an example, 2, 5 P ->
+/**
+ * Converts the given parameters to an algebratic notation code.
+ * @param The current row.
+ * @param The current column.
+ * @param The character to construct the notation code for.
+ * @return A char* containing the algebratic notation code.
+ */
 const char* convertToNotationCode(int pos1, int pos2, char character) {
     char pos2char;
     char numberAsChar;
