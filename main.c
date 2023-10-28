@@ -10,8 +10,23 @@
 const char* convertToNotationCode(int pos1, int pos2, char character);
 int** getBoardOfMatches(int row, int column);
 
+int canMove(int cord1, int cord2, int** board);
+
+void checkUp(int cord1, int cord2, int** board, char character);
+void checkUpLeft(int cord1, int cord2, int** board, char character);
+void checkUpRight(int cord1, int cord2, int** board, char character);
+
+void checkLeft(int cord1, int cord2, int** board, char character);
+void checkRight(int cord1, int cord2, int** board, char character);
+
+void checkBelow(int cord1, int cord2, int** board, char character);
+void checkBelowLeft(int cord1, int cord2, int** board, char character);
+void checkBelowRight(int cord1, int cord2, int** board, char character);
+
+int checkEdgeCase(int cord1, int cord2);
+
 void checkPawnMoves(int** board);
-void checkKingMoves(int** board);
+void checkKingMoves(int i, int k, int** board);
 void checkBishopMoves(int** board);
 
 cvector_vector_type(char*) solutionsVector = NULL;
@@ -148,191 +163,350 @@ int main()
 }
 // TODO: Instead of iterating thru all elements for each character, go thru only once, and provide functions the table, and initial functions.
 
-void checkBishopMoves(int** board) {
 
-    for (int i = 0; i < 8; i++) {
-        for (int k = 0; k < 8; k++) {
-            if (board[i][k] == 4) {
-                for (int j = 0; j < 7 - k; j++) {
-                    if (board[i + 1][k + 1] == 0) {
-                        cvector_push_back(solutionsVector, convertToNotationCode(i + 1, k + 1, 'B'));
-                    } else if (board[i + 1][k + 1] > 7) {
-                        // TODO: Add + sign to notation code
-                        cvector_push_back(solutionsVector, convertToNotationCode(i + 1, k + 1, 'B'));
-                        break;
-                    } else if (board[i + 1][k + 1] < 7) {
-                        cvector_push_back(solutionsVector, convertToNotationCode(i + 1, k + 1, 'B'));
-                        break;
-                    }
+/**
+ * Evaluates wether we are in an edge case. And edge case is when a character is next to an edge, or in a corner.
+ * 0 - We are not in an edge case.
+ * 1 - We are in the left side upper corner (0,0)
+ * 2 - We are in the left side lower corner (7,0)
+ * 3 - We are in the right side upper corner (0,7)
+ * 4 - We are in the right side lower corner (7, 7)
+ * 5 - We are facing the edge on the left side (column = 0)
+ * 6 - We are facing the edge on the right side (column = 7)
+ * 7 - We are facing the edge on the upper side (row = 0)
+ * 8 - We are facing the edge on the lower side (row = 7)
+ * @param cord1 Cord 1 is the row. 0 - 7
+ * @param cord2 Cord 2 is the column 0 - 7
+ * @return If we are in an edge case, and if yes which
+ */
+int checkEdgeCase(int cord1, int cord2) {
 
-                    if (board[i + 1][k - 1] == 0) {
-                        cvector_push_back(solutionsVector, convertToNotationCode(i + 1, k - 1, 'B'));
-                        break;
-                    } else if (board[i + 1][k + 1] > 7) {
-                        cvector_push_back(solutionsVector, convertToNotationCode(i + 1, k + 1, 'B'));
-                        break;
-                    } else if (board[i - 1][k + 1] < 7) {
-                        cvector_push_back(solutionsVector, convertToNotationCode(i - 1, k + 1, 'B'));
-                        break;
-                    } else if (board[i - 1][k - 1] < 7) {
-                        cvector_push_back(solutionsVector, convertToNotationCode(i - 1, k - 1, 'B'));
-                        break;
-                    }
-                }
-            }
-        }
+    if ((cord1 > 0 && cord1 < 7) && (cord2 > 1 && cord2 < 7)) {
+        return 0;
+    } else if (cord1 == 0 && cord2 == 0) {
+        return 1;
+    } else if (cord1 == 7 && cord2 == 0) {
+        return 2;
+    } else if (cord1 == 0 && cord2 == 7) {
+        return 3;
+    } else if (cord1 == 7 && cord2 == 7) {
+        return 4;
+    } else if (cord2 == 0) {
+        return 5;
+    } else if (cord2 == 7) {
+        return 6;
+    } else if (cord1 == 0) {
+        return 7;
+    } else if (cord1 == 7) {
+        return 8;
+    }
+
+}
+
+/**
+ * Checks if the given square can be moved to.
+ * @param The current row coordinate.
+ * @param The current column coordinate.
+ * @param The 2d multidimensional array to preform the check on.
+ * @return 0 if we can't move there, due to either one of our characters occupying the space or it not being free.
+ * 1 if any of the above are false.
+ */
+int canMove(int cord1, int cord2, int** board) {
+    return board[cord1][cord2] == 0 || board[cord1][cord2] > 7;
+}
+
+
+/**
+ * Checks the value of the square above of the current character.
+ * x,y,x
+ * x,x,x
+ * x,x,x
+ * @param The current row coordinate.
+ * @param The current column coordinate.
+ * @param The 2d multidimensional array to preform the check on.
+ * @param The character to use for the notation code.
+ * @return If it's true, so the square is free, and there isn't a character of our own is standing there, it is a move, so we add it to the vector.
+ */
+void checkUp(int cord1, int cord2, int** board, char character) {
+    if (canMove(cord1 - 1, cord2, board)) {
+        cvector_push_back(solutionsVector, convertToNotationCode(cord1 - 1, cord2, character));
     }
 }
 
-void checkKingMoves(int** board) {
-  for (int i = 0; i < 8; i++) {
-        for (int k = 0; k < 8; k++) {
-            if (board[i][k] > 1 && board[i][k] < 8) {
-                if (board[i][k] == 6) {
-                        if ((k > 1 && k < 7) && (i > 0 && i < 7)) {
+/**
+ * Checks the value of the square right above us.
+ * x,x,y
+ * x,x,x
+ * x,x,x
+ * @param The current row coordinate.
+ * @param The current column coordinate.
+ * @param The 2d multidimensional array to preform the check on.
+ * @param The character to use for the notation code.
+ * @return If it's true, so the square is free, and there isn't a character of our own is standing there, it is a move, so we add it to the vector.
+ */
+void checkUpRight(int cord1, int cord2, int** board, char character) {
+    if (canMove(cord1 - 1, cord2 + 1, board)) {
+        cvector_push_back(solutionsVector, convertToNotationCode(cord1 - 1, cord2 + 1, character));
+    }
+}
 
-                            if (board[i - 1][k] == 0 || board[i - 1][k] > 7) {
-                                cvector_push_back(solutionsVector, convertToNotationCode(i - 1, k, 'K'));
-                            }
+/**
+ * Checks the value of the square left above us.
+ * y,x,x
+ * x,x,x
+ * x,x,x
+ * @param The current row coordinate.
+ * @param The current column coordinate.
+ * @param The 2d multidimensional array to preform the check on.
+ * @param The character to use for the notation code.
+ * @return If it's true, so the square is free, and there isn't a character of our own is standing there, it is a move, so we add it to the vector.
+ */
+void checkUpLeft(int cord1, int cord2, int** board, char character) {
+    if (canMove(cord1 - 1, cord2 - 1, board)) {
+        cvector_push_back(solutionsVector, convertToNotationCode(cord1 - 1, cord2 - 1, character));
+    }
+}
 
-                            if (board[i - 1][k - 1] == 0 || board[i - 1][k - 1] > 7) {
-                                cvector_push_back(solutionsVector, convertToNotationCode(i - 1, k - 1, 'K'));
-                            }
+/**
+ * Checks the value of the square to the left of us.
+ * x,x,x
+ * y,x,x
+ * x,x,x
+ * @param The current row coordinate.
+ * @param The current column coordinate.
+ * @param The 2d multidimensional array to preform the check on.
+ * @param The character to use for the notation code.
+ * @return If it's true, so the square is free, and there isn't a character of our own is standing there, it is a move, so we add it to the vector.
+ */
+void checkLeft(int cord1, int cord2, int** board, char character) {
+    if (canMove(cord1, cord2 - 1, board)) {
+        cvector_push_back(solutionsVector, convertToNotationCode(cord1, cord2 - 1, character));
+    }
+}
 
-                            if (board[i - 1][k + 1] == 0 || board[i - 1][k + 1] > 7) {
-                                cvector_push_back(solutionsVector, convertToNotationCode(i - 1, k + 1, 'K'));
-                            }
+/**
+ * Checks the value of the square to the right of us.
+ * x,x,x
+ * x,x,y
+ * x,x,x
+ * @param The current row coordinate.
+ * @param The current column coordinate.
+ * @param The 2d multidimensional array to preform the check on.
+ * @param The character to use for the notation code.
+ * @return If it's true, so the square is free, and there isn't a character of our own is standing there, it is a move, so we add it to the vector.
+ */
+void checkRight(int cord1, int cord2, int** board, char character) {
+    if (canMove(cord1, cord2 + 1, board)) {
+        cvector_push_back(solutionsVector, convertToNotationCode(cord1, cord2 + 1, character));
+    }
+}
 
-                            if (board[i][k + 1] == 0 || board[i][k + 1] > 7) {
-                                cvector_push_back(solutionsVector, convertToNotationCode(i, k + 1, 'K'));
-                            }
+/**
+ * Checks the value of the square below us.
+ * x,x,x
+ * x,x,x
+ * x,y,x
+ * @param The current row coordinate.
+ * @param The current column coordinate.
+ * @param The 2d multidimensional array to preform the check on.
+ * @param The character to use for the notation code.
+ * @return If it's true, so the square is free, and there isn't a character of our own is standing there, it is a move, so we add it to the vector.
+ */
+void checkBelow(int cord1, int cord2, int** board, char character) {
+    if (canMove(cord1 + 1, cord2, board)) {
+        cvector_push_back(solutionsVector, convertToNotationCode(cord1 + 1, cord2, character));
+    }
+}
 
-                            if (board[i][k - 1] == 0 || board[i][k - 1] > 7) {
-                                cvector_push_back(solutionsVector, convertToNotationCode(i, k - 1, 'K'));
-                            }
+/**
+ * Checks the value of the square left below us.
+ * x,x,x
+ * x,x,x
+ * y,x,x
+ * @param The current row coordinate.
+ * @param The current column coordinate.
+ * @param The 2d multidimensional array to preform the check on.
+ * @param The character to use for the notation code.
+ * @return If it's true, so the square is free, and there isn't a character of our own is standing there, it is a move, so we add it to the vector.
+ */
+void checkBelowLeft(int cord1, int cord2, int** board, char character) {
+    if (canMove(cord1 + 1, cord2 - 1, board)) {
+        cvector_push_back(solutionsVector, convertToNotationCode(cord1 + 1, cord2 - 1, character));
+    }
+}
 
-                            if (board[i + 1][k] == 0 || board[i + 1][k] > 7) {
-                                cvector_push_back(solutionsVector, convertToNotationCode(i + 1, k, 'K'));
-                            }
+/**
+ * Checks the value of the square right below us.
+ * x,x,x
+ * x,x,x
+ * y,x,x
+ * @param The current row coordinate.
+ * @param The current column coordinate.
+ * @param The 2d multidimensional array to preform the check on.
+ * @param The character to use for the notation code.
+ * @return If it's true, so the square is free, and there isn't a character of our own is standing there, it is a move, so we add it to the vector.
+ */
+void checkBelowRight(int cord1, int cord2, int** board, char character) {
+    if (canMove(cord1 + 1, cord2 + 1, board)) {
+        cvector_push_back(solutionsVector, convertToNotationCode(cord1 + 1, cord2 + 1, character));
+    }
+}
 
-                            if (board[i + 1][k + 1] == 0 || board[i + 1][k + 1] > 7) {
-                                cvector_push_back(solutionsVector, convertToNotationCode(i + 1, k + 1, 'K'));
-                            }
+/**
+ * Checks for all the possible moves a Bishop can make.
+ * @param The 2d multidimensional array to check the moves for.
+ * @return Doesn't return, however adds the possible moves to the vector.
+ */
+void checkBishopMoves(int** board) {
+    int k = 0;
+    int i = 0;
 
-                            if (board[i + 1][k - 1] == 0 || board[i - 1][k + 1] > 7) {
-                                cvector_push_back(solutionsVector, convertToNotationCode(i + 1, k - 1, 'K'));
-                            }
+                if ((k > 1 && k < 7) && (i > 0 && i < 7)) {
 
                         } else if (k == 0 && i == 0) {
 
-                            if (board[i + 1][k + 1] == 0 || board[i + 1][k + 1] > 7) {
-                                cvector_push_back(solutionsVector, convertToNotationCode(i + 1, k + 1, 'K'));
-                            }
-
-                            if (board[i][k + 1] == 0 || board[i][k + 1] > 7) {
-                                cvector_push_back(solutionsVector, convertToNotationCode(i, k + 1, 'K'));
-                            }
-
-                            if (board[i + 1][k] == 0 || board[i + 1][k] > 7) {
-                                cvector_push_back(solutionsVector, convertToNotationCode(i + 1, k, 'K'));
-                            }
-
-
                         } else if (k == 0 && i == 7) {
-
-                            if (board[i - 1][k + 1] == 0 || board[i - 1][k + 1] > 7) {
-                                cvector_push_back(solutionsVector, convertToNotationCode(i - 1, k + 1, 'K'));
-                            }
-
-                            if (board[i][k + 1] == 0 || board[i][k + 1] > 7) {
-                                cvector_push_back(solutionsVector, convertToNotationCode(i, k + 1, 'K'));
-                            }
-
-                            if (board[i - 1][k] == 0 || board[i - 1][k] > 7) {
-                                cvector_push_back(solutionsVector, convertToNotationCode(i - 1, k, 'K'));
-                            }
-
 
                         } else if (k == 7 && i == 0) {
 
-                            if (board[i + 1][k - 1] == 0 || board[i + 1][k - 1] > 7) {
-                                cvector_push_back(solutionsVector, convertToNotationCode(i + 1, k - 1, 'K'));
-                            }
-
-                            if (board[i][k - 1] == 0 || board[i][k - 1] > 7) {
-                                cvector_push_back(solutionsVector, convertToNotationCode(i, k - 1, 'K'));
-                            }
-
-                            if (board[i + 1][k] == 0 || board[i + 1][k] > 7) {
-                                cvector_push_back(solutionsVector, convertToNotationCode(i + 1, k, 'K'));
-                            }
-
                         } else if (i == 7 && k == 7) {
 
-                            if (board[i - 1][k - 1] == 0 || board[i - 1][k - 1] > 7) {
-                                cvector_push_back(solutionsVector, convertToNotationCode(i - 1, k - 1, 'K'));
-                            }
-
-                            if (board[i][k - 1] == 0 || board[i][k - 1] > 7) {
-                                cvector_push_back(solutionsVector, convertToNotationCode(i, k - 1, 'K'));
-                            }
-
-                            if (board[i - 1][k] == 0 || board[i + 1][k] > 7) {
-                                cvector_push_back(solutionsVector, convertToNotationCode(i - 1, k, 'K'));
-                            }
-
                         } else if (k == 0) {
-                            if (board[i + 1][k] == 0 || board[i + 1][k] > 7) {
-                                cvector_push_back(solutionsVector, convertToNotationCode(i + 1, k, 'K'));
-                            }
-
-                            if (board[i + 1][k + 1] == 0 || board[i + 1][k + 1] > 7) {
-                                cvector_push_back(solutionsVector, convertToNotationCode(i + 1, k + 1, 'K'));
-                            }
-
-                            if (board[i][k + 1] == 0 || board[i][k + 1] > 7) {
-                                cvector_push_back(solutionsVector, convertToNotationCode(i, k + 1, 'K'));
-                            }
-
-                            if (board[i - 1][k] == 0 || board[i - 1][k] > 7) {
-                                cvector_push_back(solutionsVector, convertToNotationCode(i - 1, k, 'K'));
-                            }
-
-                            if (board[i + 1][k - 1] == 0 || board[i + 1][k - 1] > 7) {
-                                cvector_push_back(solutionsVector, convertToNotationCode(i + 1, k - 1, 'K'));
-                            }
 
                         } else if (k == 7) {
-                            if (board[i - 1][k] == 0 || board[i - 1][k] > 7) {
-                                cvector_push_back(solutionsVector, convertToNotationCode(i - 1, k, 'K'));
-                            }
 
-                            if (board[i - 1][k - 1] == 0 || board[i - 1][k - 1] > 7) {
-                                cvector_push_back(solutionsVector, convertToNotationCode(i - 1, k - 1, 'K'));
-                            }
-
-                            if (board[i][k - 1] == 0 || board[i][k - 1] > 7) {
-                                cvector_push_back(solutionsVector, convertToNotationCode(i, k - 1, 'K'));
-                            }
-
-                            if (board[i + 1][k] == 0 || board[i + 1][k] > 7) {
-                                cvector_push_back(solutionsVector, convertToNotationCode(i + 1, k, 'K'));
-                            }
-
-                            if (board[i + 1][k - 1] == 0 || board[i + 1][k - 1] > 7) {
-                                cvector_push_back(solutionsVector, convertToNotationCode(i + 1, k - 1, 'K'));
-                            }
                         }
-                }
+                for (int j = 0; j < 7; j++) {
 
-            }
-        }
+                    // Right up
+                    if (board[i + 1][k + 1] == 0) {
+                        cvector_push_back(solutionsVector, convertToNotationCode(i + 1, k + 1, 'B'));
+                    } else if (board[i - 1][k + 1] > 7) {
+                        // TODO: Add + sign to notation code
+                        cvector_push_back(solutionsVector, convertToNotationCode(i + 1, k + 1, 'B'));
+                        break;
+                    } else if (board[i - 1][k + 1] < 7) {
+                        cvector_push_back(solutionsVector, convertToNotationCode(i + 1, k + 1, 'B'));
+                        break;
+                    }
+
+                    // Left up
+                    if (board[i - 1][k - 1] == 0) {
+                        cvector_push_back(solutionsVector, convertToNotationCode(i + 1, k - 1, 'B'));
+                    } else if (board[i - 1][k - 1] > 7) {
+                        cvector_push_back(solutionsVector, convertToNotationCode(i + 1, k + 1, 'B'));
+                        break;
+                    } else if (board[i - 1][k - 1] < 7) {
+                        cvector_push_back(solutionsVector, convertToNotationCode(i - 1, k + 1, 'B'));
+                        break;
+                    }
+
+                    // Left down
+                    if (board[i + 1][k - 1] == 0) {
+                        cvector_push_back(solutionsVector, convertToNotationCode(i + 1, k - 1, 'B'));
+                    } else if (board[i + 1][k - 1] > 7) {
+                        cvector_push_back(solutionsVector, convertToNotationCode(i + 1, k + 1, 'B'));
+                        break;
+                    } else if (board[i + 1][k - 1] < 7) {
+                        cvector_push_back(solutionsVector, convertToNotationCode(i - 1, k + 1, 'B'));
+                        break;
+                    }
+
+                    // Right down
+                    if (board[i + 1][k + 1] == 0) {
+                        cvector_push_back(solutionsVector, convertToNotationCode(i + 1, k - 1, 'B'));
+                    } else if (board[i + 1][k + 1] > 7) {
+                        cvector_push_back(solutionsVector, convertToNotationCode(i + 1, k + 1, 'B'));
+                        break;
+                    } else if (board[i + 1][k + 1] < 7) {
+                        cvector_push_back(solutionsVector, convertToNotationCode(i - 1, k + 1, 'B'));
+                        break;
+                    }
     }
 }
 
+/**
+ * Checks for all the possible moves a King can make.
+ * The king is special, since if in mate, it is the only character that has moves.
+ * @param The 2d multidimensinal array to check the moves for.
+ * @return Doesn't return, however adds the possible moves to the vector.
+ */
+void checkKingMoves(int i, int k, int** board) {
+    char kingIdentifier = 'K';
+    int edgeCase = checkEdgeCase(i, k);
+
+    switch (edgeCase) {
+        case 0:
+            checkUp(i, k, board, kingIdentifier);
+            checkUpLeft(i, k, board, kingIdentifier);
+            checkUpRight(i, k, board, kingIdentifier);
+
+            checkLeft(i, k, board, kingIdentifier);
+            checkRight(i, k, board, kingIdentifier);
+
+            checkBelow(i, k, board, kingIdentifier);
+            checkBelowLeft(i, k, board, kingIdentifier);
+            checkBelowRight(i, k, board, kingIdentifier);
+            break;
+        case 1:
+            checkRight(i, k, board, kingIdentifier);
+            checkBelowRight(i, k, board, kingIdentifier);
+            checkBelow(i, k, board, kingIdentifier);
+            break;
+        case 2:
+            checkUp(i, k, board, kingIdentifier);
+            checkUpRight(i, k, board, kingIdentifier);
+            checkRight(i, k, board, kingIdentifier);
+            break;
+        case 3:
+            checkBelow(i, k, board, kingIdentifier);
+            checkLeft(i, k, board, kingIdentifier);
+            checkBelowLeft(i, k, board, kingIdentifier);
+            break;
+        case 4:
+            checkUp(i, k, board, kingIdentifier);
+            checkLeft(i, k, board, kingIdentifier);
+            checkUpLeft(i, k, board, kingIdentifier);
+            break;
+        case 5:
+            checkUp(i, k, board, kingIdentifier);
+            checkRight(i, k, board, kingIdentifier);
+            checkUpRight(i, k, board, kingIdentifier);
+            checkBelow(i, k, board, kingIdentifier);
+            checkBelowRight(i, k, board, kingIdentifier);
+            break;
+        case 6:
+            checkUp(i, k, board, kingIdentifier);
+            checkLeft(i, k, board, kingIdentifier);
+            checkUpLeft(i, k, board, kingIdentifier);
+            checkBelow(i, k, board, kingIdentifier);
+            checkBelowLeft(i, k, board, kingIdentifier);
+            break;
+        case 7:
+            checkBelow(i, k, board, kingIdentifier);
+            checkLeft(i, k, board, kingIdentifier);
+            checkRight(i, k, board, kingIdentifier);
+            checkBelowLeft(i, k, board, kingIdentifier);
+            checkBelowRight(i, k, board, kingIdentifier);
+            break;
+        case 8:
+            checkUp(i, k, board, kingIdentifier);
+            checkLeft(i, k, board, kingIdentifier);
+            checkRight(i, k, board, kingIdentifier);
+            checkUpLeft(i, k, board, kingIdentifier);
+            checkUpRight(i, k, board, kingIdentifier);
+            break;
+    }
+}
+
+/**
+ * Checks for all the possible moves a Pawn can make.
+ * @param The 2d multidimensinal array to check the moves for.
+ * @return Doesn't return, however adds the possible moves to the vector.
+ */
 void checkPawnMoves(int** board) {
-  for (int i = 0; i < 8; i++) {
-        for (int k = 0; k < 8; k++) {
+        int i = 0;
+        int k = 0;
             // If we are bigger than 1, that means that there is a piece there.
             // We are only interested in white pieces
             if (board[i][k] > 1 && board[i][k] < 8) {
