@@ -1,5 +1,8 @@
 # ChessTwoTries
 
+*Warning: Please do not consider this feature complete. The implementation for the queen, the knight, and the rook are missing, and parts of bishop's. Additionally, I want to add a proper
+package manager, and create a proper arhitecture. Anyhow, I'll try to keep this repo up to date with the current progress.*
+
 A stupid chess engine.
 
 - Why stupid? 
