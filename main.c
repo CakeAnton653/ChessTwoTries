@@ -193,6 +193,7 @@ int main()
  * 6 - We are facing the edge on the right side (column = 7)
  * 7 - We are facing the edge on the upper side (row = 0)
  * 8 - We are facing the edge on the lower side (row = 7)
+ * 9 - We are out of bounds, and should absolutely not be checking stuff anymore.
  * @param cord1 Cord 1 is the row. 0 - 7
  * @param cord2 Cord 2 is the column 0 - 7
  * @return If we are in an edge case, and if yes which
@@ -217,6 +218,8 @@ int checkEdgeCase(int cord1, int cord2) {
         return 7;
     } else if (cord1 == 7) {
         return 8;
+    } else if ((cord1 > 7 || cord1 < 0) || (cord2 < 0 || cord2 > 7)) {
+        return 9;
     }
 
 }
