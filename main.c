@@ -27,7 +27,7 @@ int checkEdgeCase(int cord1, int cord2);
 
 void checkPawnMoves(int** board);
 void checkKingMoves(int i, int k, int** board);
-void checkBishopMoves(int** board);
+void checkBishopMoves(int i, int k, int** board);
 
 cvector_vector_type(char*) solutionsVector = NULL;
 
@@ -147,7 +147,7 @@ int main()
                 case 5:
                     break;
                 case 4:
-                    // checkBishopMoves(boardOfMatches);
+                    checkBishopMoves(i, k, boardOfMatches);
                     break;
             case 3:
                 break;
@@ -375,71 +375,69 @@ void checkBelowRight(int cord1, int cord2, int** board, char character) {
  * @param The 2d multidimensional array to check the moves for.
  * @return Doesn't return, however adds the possible moves to the vector.
  */
-void checkBishopMoves(int** board) {
-    int k = 0;
-    int i = 0;
+void checkBishopMoves(int i, int k, int** board) {
+    char bishopIdentifier = 'B';
+    int edgeCase = checkEdgeCase(i, k);
+    int internalEdgeCase = checkEdgeCase(i, k);
 
-                if ((k > 1 && k < 7) && (i > 0 && i < 7)) {
+    switch (edgeCase) {
+        case 0:
+            // Since there are no edge cases, we can preform a check on each side, and go as long as we don't encounter any issues.
+            for (int z = 0; z < 7; z++) {
+                if (internalEdgeCase > 8) {
+                    break;
+                }
+                checkUpRight(i + z, k + z, board, bishopIdentifier);
+                internalEdgeCase = checkEdgeCase(i + z, k + z);
+            }
 
-                        } else if (k == 0 && i == 0) {
+            // Reset so we can check the other angles.
+            internalEdgeCase = checkEdgeCase(i, k);
 
-                        } else if (k == 0 && i == 7) {
+            for (int z = 0; z < 7; z++) {
+                if (internalEdgeCase > 8) {
+                    break;
+                }
+                checkUpLeft(i + z, k + z, board, bishopIdentifier);
+                internalEdgeCase = checkEdgeCase(i + z, k + z);
+            }
 
-                        } else if (k == 7 && i == 0) {
+            internalEdgeCase = checkEdgeCase(i, k);
 
-                        } else if (i == 7 && k == 7) {
+            for (int z = 0; z < 7; z++) {
+                if (internalEdgeCase > 8) {
+                    break;
+                }
+                checkBelowLeft(i - z, k - z, board, bishopIdentifier);
+                internalEdgeCase = checkEdgeCase(i - z, k - z);
+            }
 
-                        } else if (k == 0) {
+            internalEdgeCase = checkEdgeCase(i, k);
 
-                        } else if (k == 7) {
+            for (int z = 0; z < 7; z++) {
+                if (internalEdgeCase > 8) {
+                    break;
+                }
+                checkBelowRight(i - z, k - z, board, bishopIdentifier);
+                internalEdgeCase = checkEdgeCase(i - z, k - z);
+            }
 
-                        }
-                for (int j = 0; j < 7; j++) {
+            break;
+        case 1:
+            break;
+        case 2:
+            break;
+        case 3:
+            break;
+        case 4:
+            break;
+        case 5:
+            break;
+        case 6:
+            break;
+        case 7:
+            break;
 
-                    // Right up
-                    if (board[i + 1][k + 1] == 0) {
-                        cvector_push_back(solutionsVector, convertToNotationCode(i + 1, k + 1, 'B'));
-                    } else if (board[i - 1][k + 1] > 7) {
-                        // TODO: Add + sign to notation code
-                        cvector_push_back(solutionsVector, convertToNotationCode(i + 1, k + 1, 'B'));
-                        break;
-                    } else if (board[i - 1][k + 1] < 7) {
-                        cvector_push_back(solutionsVector, convertToNotationCode(i + 1, k + 1, 'B'));
-                        break;
-                    }
-
-                    // Left up
-                    if (board[i - 1][k - 1] == 0) {
-                        cvector_push_back(solutionsVector, convertToNotationCode(i + 1, k - 1, 'B'));
-                    } else if (board[i - 1][k - 1] > 7) {
-                        cvector_push_back(solutionsVector, convertToNotationCode(i + 1, k + 1, 'B'));
-                        break;
-                    } else if (board[i - 1][k - 1] < 7) {
-                        cvector_push_back(solutionsVector, convertToNotationCode(i - 1, k + 1, 'B'));
-                        break;
-                    }
-
-                    // Left down
-                    if (board[i + 1][k - 1] == 0) {
-                        cvector_push_back(solutionsVector, convertToNotationCode(i + 1, k - 1, 'B'));
-                    } else if (board[i + 1][k - 1] > 7) {
-                        cvector_push_back(solutionsVector, convertToNotationCode(i + 1, k + 1, 'B'));
-                        break;
-                    } else if (board[i + 1][k - 1] < 7) {
-                        cvector_push_back(solutionsVector, convertToNotationCode(i - 1, k + 1, 'B'));
-                        break;
-                    }
-
-                    // Right down
-                    if (board[i + 1][k + 1] == 0) {
-                        cvector_push_back(solutionsVector, convertToNotationCode(i + 1, k - 1, 'B'));
-                    } else if (board[i + 1][k + 1] > 7) {
-                        cvector_push_back(solutionsVector, convertToNotationCode(i + 1, k + 1, 'B'));
-                        break;
-                    } else if (board[i + 1][k + 1] < 7) {
-                        cvector_push_back(solutionsVector, convertToNotationCode(i - 1, k + 1, 'B'));
-                        break;
-                    }
     }
 }
 
