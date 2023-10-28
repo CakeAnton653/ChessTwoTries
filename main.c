@@ -383,6 +383,8 @@ void checkBishopMoves(int i, int k, int** board) {
     int edgeCase = checkEdgeCase(i, k);
     int internalEdgeCase = checkEdgeCase(i, k);
 
+    // TODO: Figure out what to do when we hit an enemy piece, since in that case we can't progress futher on that diagonal.
+
     switch (edgeCase) {
         case 0:
             // Since there are no edge cases, we can preform a check on each side, and go as long as we don't encounter any issues.
