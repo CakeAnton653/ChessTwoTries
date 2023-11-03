@@ -334,7 +334,7 @@ void checkBelowLeft(int cord1, int cord2, int** board, char character) {
  * Checks the value of the square right below us.
  * x,x,x
  * x,x,x
- * y,x,x
+ * x,x,y
  * @param The current row coordinate.
  * @param The current column coordinate.
  * @param The 2d multidimensional array to preform the check on.
