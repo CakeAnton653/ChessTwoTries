@@ -151,7 +151,8 @@ int main()
                     checkBishopMoves(i, k, boardOfMatches);
                     break;
             case 3:
-                break;
+                    checkKnightMoves(i, k, boardOfMatches);
+                    break;
             case 2:
                 break;
             }
@@ -372,6 +373,141 @@ void checkAllAngles(int cord1, int cord2, int** board, char character) {
  checkBelowLeft(cord1, cord2, board, character);
 }
 
+/**
+ * Checks the value of the square left below us, in the L formation of the horse.
+ * @param The current row coordinate.
+ * @param The current column coordinate.
+ * @param The 2d multidimensional array to preform the check on.
+ * @param The character to use for the notation code.
+ * @return If it's true, so the square is free, and there isn't a character of our own is standing there, it is a move, so we add it to the vector.
+ */
+void checkBelowLLeft(int cord1, int cord2, int** board, char character) {
+    if (canMove(cord1 + 2, cord2 - 1, board)) {
+        cvector_push_back(solutionsVector, convertToNotationCode(cord1 + 3, cord2 - 1, character));
+    }
+}
+
+/**
+ * Checks the value of the square right below us, in the L formation of the horse.
+ * @param The current row coordinate.
+ * @param The current column coordinate.
+ * @param The 2d multidimensional array to preform the check on.
+ * @param The character to use for the notation code.
+ * @return If it's true, so the square is free, and there isn't a character of our own is standing there, it is a move, so we add it to the vector.
+ */
+void checkBelowLRight(int cord1, int cord2, int** board, char character) {
+    if (canMove(cord1 + 2, cord2 + 1, board)) {
+        cvector_push_back(solutionsVector, convertToNotationCode(cord1 + 3, cord2 + 1, character));
+    }
+}
+
+/**
+ * Checks the value of the square right up, in the L formation of the horse.
+ * @param The current row coordinate.
+ * @param The current column coordinate.
+ * @param The 2d multidimensional array to preform the check on.
+ * @param The character to use for the notation code.
+ * @return If it's true, so the square is free, and there isn't a character of our own is standing there, it is a move, so we add it to the vector.
+ */
+void checkRightLUp(int cord1, int cord2, int** board, char character) {
+    if (canMove(cord1 + 1, cord2 + 2, board)) {
+        cvector_push_back(solutionsVector, convertToNotationCode(cord1 + 1, cord2 + 3, character));
+    }
+}
+
+/**
+ * Checks the value of the square right below us, in the L formation of the horse.
+ * @param The current row coordinate.
+ * @param The current column coordinate.
+ * @param The 2d multidimensional array to preform the check on.
+ * @param The character to use for the notation code.
+ * @return If it's true, so the square is free, and there isn't a character of our own is standing there, it is a move, so we add it to the vector.
+ */
+void checkRightLBelow(int cord1, int cord2, int** board, char character) {
+    if (canMove(cord1 - 1, cord2 + 3, board)) {
+        cvector_push_back(solutionsVector, convertToNotationCode(cord1 - 1, cord2 + 3, character));
+    }
+}
+
+/**
+ * Checks the value of the square left up, in the L formation of the horse.
+ * @param The current row coordinate.
+ * @param The current column coordinate.
+ * @param The 2d multidimensional array to preform the check on.
+ * @param The character to use for the notation code.
+ * @return If it's true, so the square is free, and there isn't a character of our own is standing there, it is a move, so we add it to the vector.
+ */
+void checkLeftLUp(int cord1, int cord2, int** board, char character) {
+    if (canMove(cord1 - 1, cord2 - 2, board)) {
+        cvector_push_back(solutionsVector, convertToNotationCode(cord1 - 1, cord2 - 3, character));
+    }
+}
+
+/**
+ * Checks the value of the square left below us, in the L formation of the horse.
+ * @param The current row coordinate.
+ * @param The current column coordinate.
+ * @param The 2d multidimensional array to preform the check on.
+ * @param The character to use for the notation code.
+ * @return If it's true, so the square is free, and there isn't a character of our own is standing there, it is a move, so we add it to the vector.
+ */
+void checkLeftLBelow(int cord1, int cord2, int** board, char character) {
+    if (canMove(cord1 + 1, cord2 - 2, board)) {
+        cvector_push_back(solutionsVector, convertToNotationCode(cord1 + 1, cord2 - 3, character));
+    }
+}
+
+/**
+ * Checks the value of the square right below us, in the L formation of the horse.
+ * @param The current row coordinate.
+ * @param The current column coordinate.
+ * @param The 2d multidimensional array to preform the check on.
+ * @param The character to use for the notation code.
+ * @return If it's true, so the square is free, and there isn't a character of our own is standing there, it is a move, so we add it to the vector.
+ */
+void checkUpLRight(int cord1, int cord2, int** board, char character) {
+    if (canMove(cord1 - 2, cord2 + 1, board)) {
+        cvector_push_back(solutionsVector, convertToNotationCode(cord1 - 3, cord2 + 1, character));
+    }
+}
+
+/**
+ * Checks the value of the square right below us, in the L formation of the horse.
+ * @param The current row coordinate.
+ * @param The current column coordinate.
+ * @param The 2d multidimensional array to preform the check on.
+ * @param The character to use for the notation code.
+ * @return If it's true, so the square is free, and there isn't a character of our own is standing there, it is a move, so we add it to the vector.
+ */
+void checkUpLLeft(int cord1, int cord2, int** board, char character) {
+    if (canMove(cord1 - 2, cord2 - 1, board)) {
+        cvector_push_back(solutionsVector, convertToNotationCode(cord1 - 3, cord2 - 1, character));
+    }
+}
+// TODO: FIxup docs for horse related functions.
+
+/**
+ * Checks the value of the square right below us, in the L formation of the horse.
+ * @param The current row coordinate.
+ * @param The current column coordinate.
+ * @param The 2d multidimensional array to preform the check on.
+ * @param The character to use for the notation code.
+ * @return If it's true, so the square is free, and there isn't a character of our own is standing there, it is a move, so we add it to the vector.
+ */
+void checkAllLAround(int cord1, int cord2, int** board, char character) {
+    checkLeftLBelow(cord1, cord2, board, character);
+    checkLeftLUp(cord1, cord2, board, character);
+
+    checkRightLBelow(cord1, cord2, board, character);
+    checkRightLUp(cord1, cord2, board, character);
+
+    checkBelowLLeft(cord1, cord2, board, character);
+    checkBelowLRight(cord1, cord2, board, character);
+
+    checkUpLLeft(cord1, cord2, board, character);
+    checkUpLRight(cord1, cord2, board, character);
+}
+
 
 /**
  * Checks if the given character is an enemy.
@@ -382,6 +518,11 @@ int checkIfIsEnemy(int character) {
     return character > 7;
 }
 
+void checkKnightMoves(int i, int k, int** board) {
+    char knightIdentifier = 'N';
+    checkAllLAround(i, k, board, knightIdentifier);
+}
+
 /**
  * Checks for all the possible moves a Bishop can make.
  * @param The 2d multidimensional array to check the moves for.
@@ -390,7 +531,7 @@ int checkIfIsEnemy(int character) {
 void checkBishopMoves(int i, int k, int** board) {
     char bishopIdentifier = 'B';
 
-    // Had to use seperate loops here due to one angle terminating resulting in closing all the other, may be open ones.
+    // Had to use separate loops here due to one angle terminating resulting in closing all the other, may be open ones.
     for (int z = 0; z < 7; z++) {
         if (!isOutOfBounds(i - z - 1, k + z + 1)) {
             if (checkIfIsEnemy(board[i - z - 1][k + z + 1])) {
