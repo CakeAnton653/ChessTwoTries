@@ -513,6 +513,10 @@ int checkIfIsEnemy(int character) {
     return character > 7;
 }
 
+int checkIfIsFriendly(int character) {
+    return character < 7;
+}
+
 void checkKnightMoves(int i, int k, int** board) {
     char knightIdentifier = 'N';
     checkAllLAround(i, k, board, knightIdentifier);
