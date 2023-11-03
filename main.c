@@ -348,6 +348,28 @@ void checkBelowRight(int cord1, int cord2, int** board, char character) {
 }
 
 /**
+ * Checks the value of the square right below us.
+ * y,y,y
+ * y,x,y
+ * y,y,y
+ * @param The current row coordinate.
+ * @param The current column coordinate.
+ * @param The 2d multidimensional array to preform the check on.
+ * @param The character to use for the notation code.
+ * @return If it's true, so the square is free, and there isn't a character of our own is standing there, it is a move, so we add it to the vector.
+ */
+void checkAllAngles(int cord1, int cord2, int** board, char character) {
+ checkUp(cord1, cord2, board, character);
+ checkUpRight(cord1, cord2, board, character);
+ checkUpLeft(cord1, cord2, board, character);
+ checkLeft(cord1, cord2, board, character);
+ checkRight(cord1, cord2, board, character);
+ checkBelow(cord1, cord2, board, character);
+ checkBelowRight(cord1, cord2, board, character);
+ checkBelowLeft(cord1, cord2, board, character);
+}
+
+/**
  * Checks for all the possible moves a Bishop can make.
  * @param The 2d multidimensional array to check the moves for.
  * @return Doesn't return, however adds the possible moves to the vector.
@@ -428,70 +450,7 @@ void checkBishopMoves(int i, int k, int** board) {
  */
 void checkKingMoves(int i, int k, int** board) {
     char kingIdentifier = 'K';
-    int edgeCase = checkEdgeCase(i, k);
-
-    switch (edgeCase) {
-        case 0:
-            checkUp(i, k, board, kingIdentifier);
-            checkUpLeft(i, k, board, kingIdentifier);
-            checkUpRight(i, k, board, kingIdentifier);
-
-            checkLeft(i, k, board, kingIdentifier);
-            checkRight(i, k, board, kingIdentifier);
-
-            checkBelow(i, k, board, kingIdentifier);
-            checkBelowLeft(i, k, board, kingIdentifier);
-            checkBelowRight(i, k, board, kingIdentifier);
-            break;
-        case 1:
-            checkRight(i, k, board, kingIdentifier);
-            checkBelowRight(i, k, board, kingIdentifier);
-            checkBelow(i, k, board, kingIdentifier);
-            break;
-        case 2:
-            checkUp(i, k, board, kingIdentifier);
-            checkUpRight(i, k, board, kingIdentifier);
-            checkRight(i, k, board, kingIdentifier);
-            break;
-        case 3:
-            checkBelow(i, k, board, kingIdentifier);
-            checkLeft(i, k, board, kingIdentifier);
-            checkBelowLeft(i, k, board, kingIdentifier);
-            break;
-        case 4:
-            checkUp(i, k, board, kingIdentifier);
-            checkLeft(i, k, board, kingIdentifier);
-            checkUpLeft(i, k, board, kingIdentifier);
-            break;
-        case 5:
-            checkUp(i, k, board, kingIdentifier);
-            checkRight(i, k, board, kingIdentifier);
-            checkUpRight(i, k, board, kingIdentifier);
-            checkBelow(i, k, board, kingIdentifier);
-            checkBelowRight(i, k, board, kingIdentifier);
-            break;
-        case 6:
-            checkUp(i, k, board, kingIdentifier);
-            checkLeft(i, k, board, kingIdentifier);
-            checkUpLeft(i, k, board, kingIdentifier);
-            checkBelow(i, k, board, kingIdentifier);
-            checkBelowLeft(i, k, board, kingIdentifier);
-            break;
-        case 7:
-            checkBelow(i, k, board, kingIdentifier);
-            checkLeft(i, k, board, kingIdentifier);
-            checkRight(i, k, board, kingIdentifier);
-            checkBelowLeft(i, k, board, kingIdentifier);
-            checkBelowRight(i, k, board, kingIdentifier);
-            break;
-        case 8:
-            checkUp(i, k, board, kingIdentifier);
-            checkLeft(i, k, board, kingIdentifier);
-            checkRight(i, k, board, kingIdentifier);
-            checkUpLeft(i, k, board, kingIdentifier);
-            checkUpRight(i, k, board, kingIdentifier);
-            break;
-    }
+    checkAllAngles(i, k, board, kingIdentifier);
 }
 
 /**
