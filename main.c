@@ -389,70 +389,29 @@ int checkIfIsEnemy(int character) {
  */
 void checkBishopMoves(int i, int k, int** board) {
     char bishopIdentifier = 'B';
-    int edgeCase = checkEdgeCase(i, k);
-    int internalEdgeCase = checkEdgeCase(i, k);
 
-    // TODO: Figure out what to do when we hit an enemy piece, since in that case we can't progress futher on that diagonal.
-
-    switch (edgeCase) {
-        case 0:
-            // Since there are no edge cases, we can preform a check on each side, and go as long as we don't encounter any issues.
-            for (int z = 0; z < 7; z++) {
-                if (internalEdgeCase > 8) {
-                    break;
-                }
-                checkUpRight(i + z, k + z, board, bishopIdentifier);
-                internalEdgeCase = checkEdgeCase(i + z, k + z);
-            }
-
-            // Reset so we can check the other angles.
-            internalEdgeCase = checkEdgeCase(i, k);
-
-            for (int z = 0; z < 7; z++) {
-                if (internalEdgeCase > 8) {
-                    break;
-                }
-                checkUpLeft(i + z, k + z, board, bishopIdentifier);
-                internalEdgeCase = checkEdgeCase(i + z, k + z);
-            }
-
-            internalEdgeCase = checkEdgeCase(i, k);
-
-            for (int z = 0; z < 7; z++) {
-                if (internalEdgeCase > 8) {
-                    break;
-                }
-                checkBelowLeft(i - z, k - z, board, bishopIdentifier);
-                internalEdgeCase = checkEdgeCase(i - z, k - z);
-            }
-
-            internalEdgeCase = checkEdgeCase(i, k);
-
-            for (int z = 0; z < 7; z++) {
-                if (internalEdgeCase > 8) {
-                    break;
-                }
-                checkBelowRight(i - z, k - z, board, bishopIdentifier);
-                internalEdgeCase = checkEdgeCase(i - z, k - z);
-            }
-
+    for (int z = 0; z < 7; z++) {
+        checkUpRight(i - z, k + z, board, bishopIdentifier);
+        if (checkIfIsEnemy(board[i - z][k + z])) {
             break;
-        case 1:
-            break;
-        case 2:
-            break;
-        case 3:
-            break;
-        case 4:
-            break;
-        case 5:
-            break;
-        case 6:
-            break;
-        case 7:
-            break;
+        }
 
+        checkUpLeft(i - z, k - z, board, bishopIdentifier);
+        if (checkIfIsEnemy(board[i - z][k - z])) {
+            break;
+        }
+
+        checkBelowLeft(i + z, k - z, board, bishopIdentifier);
+        if (checkIfIsEnemy(board[i + z][k - z])) {
+            break;
+        }
+
+        checkBelowRight(i + z, k + z, board, bishopIdentifier);
+        if (checkIfIsEnemy(board[i + z][k + z])) {
+            break;
+        }
     }
+
 }
 
 /**
@@ -491,7 +450,7 @@ int** getBoardOfMatches(int row, int column) {
     temp[0] = (int *)calloc(row * column, sizeof(int));
 
     for(j = 1; j < row; j++) {
-        temp[j] = temp[j-1]+column;
+        temp[j] = temp[j - 1] + column;
     }
 
     return temp;
