@@ -29,6 +29,7 @@ int checkIfIsEnemy(int character);
 void checkPawnMoves(int i, int k, int** board);
 void checkKingMoves(int i, int k, int** board);
 void checkBishopMoves(int i, int k, int** board);
+void checkRookMoves(int i, int k, int** board);
 
 cvector_vector_type(char*) solutionsVector = NULL;
 
@@ -154,6 +155,7 @@ int main()
                     checkKnightMoves(i, k, boardOfMatches);
                     break;
             case 2:
+                    checkRookMoves(i, k, boardOfMatches);
                 break;
             }
         }
@@ -561,6 +563,47 @@ void checkBishopMoves(int i, int k, int** board) {
         }
         checkBelowRight(i + z, k + z, board, bishopIdentifier);
     }
+}
+
+void checkRookMoves(int i, int k, int** board) {
+    char rookIdentifier = 'R';
+
+    for (int z = 0; z < 7; z++) {
+        if (!isOutOfBounds(i - z - 1, k)) {
+            if (checkIfIsEnemy(board[i - z - 1][k]) || checkIfIsFriendly(board[i - z - 1][k])) {
+                break;
+            }
+        }
+        checkUp(i - z, k, board, rookIdentifier);
+    }
+
+    for (int z = 0; z < 7; z++) {
+        if (!isOutOfBounds(i, k - z - 1)) {
+            if (checkIfIsEnemy(board[i][k - z - 1]) || checkIfIsFriendly(board[i][k - z - 1])) {
+                break;
+            }
+        }
+        checkLeft(i, k - z, board, rookIdentifier);
+    }
+
+    for (int z = 0; z < 7; z++) {
+        if (!isOutOfBounds(i, k + z + 1)) {
+            if (checkIfIsEnemy(board[i][k + z + 1]) || checkIfIsFriendly(board[i][k + z + 1])) {
+                break;
+            }
+        }
+        checkRight(i, k + z, board, rookIdentifier);
+    }
+
+    for (int z = 0; z < 7; z++) {
+        if (!isOutOfBounds(i - z - 1, k)) {
+            if (checkIfIsEnemy(board[i - z - 1][k]) || checkIfIsFriendly(board[i - z - 1][k])) {
+                break;
+            }
+        }
+        checkBelow(i - z - 1, k, board, rookIdentifier);
+    }
+
 }
 
 /**
