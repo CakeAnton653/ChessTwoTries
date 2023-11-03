@@ -388,7 +388,6 @@ void checkBelowLLeft(int cord1, int cord2, int** board, char character) {
 }
 
 /**
- * Checks the value of the square right below us, in the L formation of the horse.
  * @param The current row coordinate.
  * @param The current column coordinate.
  * @param The 2d multidimensional array to preform the check on.
@@ -397,12 +396,11 @@ void checkBelowLLeft(int cord1, int cord2, int** board, char character) {
  */
 void checkBelowLRight(int cord1, int cord2, int** board, char character) {
     if (canMove(cord1 + 2, cord2 + 1, board)) {
-        cvector_push_back(solutionsVector, convertToNotationCode(cord1 + 3, cord2 + 1, character));
+        cvector_push_back(solutionsVector, convertToNotationCode(cord1 + 2, cord2 + 1, character));
     }
 }
 
 /**
- * Checks the value of the square right up, in the L formation of the horse.
  * @param The current row coordinate.
  * @param The current column coordinate.
  * @param The 2d multidimensional array to preform the check on.
@@ -411,12 +409,11 @@ void checkBelowLRight(int cord1, int cord2, int** board, char character) {
  */
 void checkRightLUp(int cord1, int cord2, int** board, char character) {
     if (canMove(cord1 + 1, cord2 + 2, board)) {
-        cvector_push_back(solutionsVector, convertToNotationCode(cord1 + 1, cord2 + 3, character));
+        cvector_push_back(solutionsVector, convertToNotationCode(cord1 + 1, cord2 + 2, character));
     }
 }
 
 /**
- * Checks the value of the square right below us, in the L formation of the horse.
  * @param The current row coordinate.
  * @param The current column coordinate.
  * @param The 2d multidimensional array to preform the check on.
@@ -424,13 +421,12 @@ void checkRightLUp(int cord1, int cord2, int** board, char character) {
  * @return If it's true, so the square is free, and there isn't a character of our own is standing there, it is a move, so we add it to the vector.
  */
 void checkRightLBelow(int cord1, int cord2, int** board, char character) {
-    if (canMove(cord1 - 1, cord2 + 3, board)) {
-        cvector_push_back(solutionsVector, convertToNotationCode(cord1 - 1, cord2 + 3, character));
+    if (canMove(cord1 - 1, cord2 + 2, board)) {
+        cvector_push_back(solutionsVector, convertToNotationCode(cord1 - 1, cord2 + 2, character));
     }
 }
 
 /**
- * Checks the value of the square left up, in the L formation of the horse.
  * @param The current row coordinate.
  * @param The current column coordinate.
  * @param The 2d multidimensional array to preform the check on.
@@ -439,12 +435,11 @@ void checkRightLBelow(int cord1, int cord2, int** board, char character) {
  */
 void checkLeftLUp(int cord1, int cord2, int** board, char character) {
     if (canMove(cord1 - 1, cord2 - 2, board)) {
-        cvector_push_back(solutionsVector, convertToNotationCode(cord1 - 1, cord2 - 3, character));
+        cvector_push_back(solutionsVector, convertToNotationCode(cord1 - 1, cord2 - 2, character));
     }
 }
 
 /**
- * Checks the value of the square left below us, in the L formation of the horse.
  * @param The current row coordinate.
  * @param The current column coordinate.
  * @param The 2d multidimensional array to preform the check on.
@@ -453,12 +448,11 @@ void checkLeftLUp(int cord1, int cord2, int** board, char character) {
  */
 void checkLeftLBelow(int cord1, int cord2, int** board, char character) {
     if (canMove(cord1 + 1, cord2 - 2, board)) {
-        cvector_push_back(solutionsVector, convertToNotationCode(cord1 + 1, cord2 - 3, character));
+        cvector_push_back(solutionsVector, convertToNotationCode(cord1 + 1, cord2 - 2, character));
     }
 }
 
 /**
- * Checks the value of the square right below us, in the L formation of the horse.
  * @param The current row coordinate.
  * @param The current column coordinate.
  * @param The 2d multidimensional array to preform the check on.
@@ -467,12 +461,11 @@ void checkLeftLBelow(int cord1, int cord2, int** board, char character) {
  */
 void checkUpLRight(int cord1, int cord2, int** board, char character) {
     if (canMove(cord1 - 2, cord2 + 1, board)) {
-        cvector_push_back(solutionsVector, convertToNotationCode(cord1 - 3, cord2 + 1, character));
+        cvector_push_back(solutionsVector, convertToNotationCode(cord1 - 2, cord2 + 1, character));
     }
 }
 
 /**
- * Checks the value of the square right below us, in the L formation of the horse.
  * @param The current row coordinate.
  * @param The current column coordinate.
  * @param The 2d multidimensional array to preform the check on.
@@ -481,13 +474,13 @@ void checkUpLRight(int cord1, int cord2, int** board, char character) {
  */
 void checkUpLLeft(int cord1, int cord2, int** board, char character) {
     if (canMove(cord1 - 2, cord2 - 1, board)) {
-        cvector_push_back(solutionsVector, convertToNotationCode(cord1 - 3, cord2 - 1, character));
+        cvector_push_back(solutionsVector, convertToNotationCode(cord1 - 2, cord2 - 1, character));
     }
 }
 // TODO: FIxup docs for horse related functions.
 
 /**
- * Checks the value of the square right below us, in the L formation of the horse.
+ * Checks the value of the squares around us, in the L formation of the horse.
  * @param The current row coordinate.
  * @param The current column coordinate.
  * @param The 2d multidimensional array to preform the check on.
