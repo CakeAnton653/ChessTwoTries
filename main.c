@@ -24,8 +24,9 @@ void checkBelowLeft(int cord1, int cord2, int** board, char character);
 void checkBelowRight(int cord1, int cord2, int** board, char character);
 
 int isOutOfBounds(int cord1, int cord2);
+int checkIfIsEnemy(int character);
 
-void checkPawnMoves(int** board);
+void checkPawnMoves(int i, int k, int** board);
 void checkKingMoves(int i, int k, int** board);
 void checkBishopMoves(int i, int k, int** board);
 
@@ -139,7 +140,7 @@ int main()
         for (int k = 0; k < 8; k++) {
             switch (boardOfMatches[i][k]) {
                 case 7:
-                    // checkPawnMoves(boardOfMatches);
+                    checkPawnMoves(i, k, boardOfMatches);
                     break;
                 case 6:
                     checkKingMoves(i, k, boardOfMatches);
@@ -458,43 +459,10 @@ void checkKingMoves(int i, int k, int** board) {
  * @param The 2d multidimensinal array to check the moves for.
  * @return Doesn't return, however adds the possible moves to the vector.
  */
-void checkPawnMoves(int** board) {
-        int i = 0;
-        int k = 0;
-            // If we are bigger than 1, that means that there is a piece there.
-            // We are only interested in white pieces
-            if (board[i][k] > 1 && board[i][k] < 8) {
-                if (board[i][k] == 7) {
-                    // On the last line we promote, so don't run the checking logic
-                    if (i > 0) {
-                        // We have to be on the right spot to be able to check both sides.
-                        if (k > 1 && k < 7) {
-
-                            // Move is possible on the right!
-                            if (board[i - 1][k + 1] == 0 || board[i - 1][k + 1] > 7) {
-                                cvector_push_back(solutionsVector, convertToNotationCode(i - 1, k + 1, 'P'));
-                            }
-
-                            // And left!
-                            if (board[i - 1][k - 1] == 0 || board[i - 1][k - 1] > 7) {
-                                cvector_push_back(solutionsVector, convertToNotationCode(i - 1, k - 1, 'P'));
-                            }
-                        // Here we can only check the right side.
-                        } else if (k == 0) {
-                            if (board[i - 1][k + 1] == 0 || board[i - 1][k + 1] > 7) {
-                               cvector_push_back(solutionsVector, convertToNotationCode(i - 1, k + 1, 'P'));
-                            }
-                        // Here we can only check the left side.
-                        } else if (k == 7) {
-                            if (board[i - 1][k - 1] == 0 || board[i - 1][k - 1] > 7) {
-                              cvector_push_back(solutionsVector, convertToNotationCode(i - 1, k - 1, 'P'));
-                            }
-                        }
-                    }
-                }
-
-
-    }
+void checkPawnMoves(int i, int k, int** board) {
+    char pawnIdentifier = 'P';
+    checkUpRight(i, k, board, pawnIdentifier);
+    checkUpLeft(i, k, board, pawnIdentifier);
 }
 
 /**
