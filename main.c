@@ -533,7 +533,7 @@ void checkBishopMoves(int i, int k, int** board) {
     // Had to use separate loops here due to one angle terminating resulting in closing all the other, may be open ones.
     for (int z = 0; z < 7; z++) {
         if (!isOutOfBounds(i - z - 1, k + z + 1)) {
-            if (checkIfIsEnemy(board[i - z - 1][k + z + 1])) {
+            if (checkIfIsEnemy(board[i - z - 1][k + z + 1]) || checkIfIsFriendly(board[i - z - 1][k + z + 1])) {
                 break;
             }
         }
@@ -543,7 +543,7 @@ void checkBishopMoves(int i, int k, int** board) {
 
     for (int z = 0; z < 7; z++) {
         if (!isOutOfBounds(i - z - 1, k - z - 1)) {
-            if (checkIfIsEnemy(board[i - z - 1][k + z - 1])) {
+            if (checkIfIsEnemy(board[i - z - 1][k + z - 1]) || checkIfIsFriendly(board[i - z - 1][k + z - 1])) {
                 break;
             }
         }
@@ -552,7 +552,7 @@ void checkBishopMoves(int i, int k, int** board) {
 
     for (int z = 0; z < 7; z++) {
         if (!isOutOfBounds(i + z + 1, k - z - 1)) {
-            if (checkIfIsEnemy(board[i - z + 1][k + z - 1])) {
+            if (checkIfIsEnemy(board[i - z + 1][k + z - 1]) || checkIfIsFriendly(board[i - z + 1][k + z - 1])) {
                 break;
             }
         }
@@ -561,7 +561,7 @@ void checkBishopMoves(int i, int k, int** board) {
 
     for (int z = 0; z < 7; z++) {
         if (!isOutOfBounds(i + z + 1, k + z + 1)) {
-            if (checkIfIsEnemy(board[i - z + 1][k + z + 1])) {
+            if (checkIfIsEnemy(board[i - z + 1][k + z + 1]) || checkIfIsFriendly(board[i - z + 1][k + z + 1])) {
                 break;
             }
         }
