@@ -390,28 +390,43 @@ int checkIfIsEnemy(int character) {
 void checkBishopMoves(int i, int k, int** board) {
     char bishopIdentifier = 'B';
 
+    // Had to use seperate loops here due to one angle terminating resulting in closing all the other, may be open ones.
     for (int z = 0; z < 7; z++) {
+        if (!isOutOfBounds(i - z - 1, k + z + 1)) {
+            if (checkIfIsEnemy(board[i - z - 1][k + z + 1])) {
+                break;
+            }
+        }
         checkUpRight(i - z, k + z, board, bishopIdentifier);
-        if (checkIfIsEnemy(board[i - z][k + z])) {
-            break;
-        }
-
-        checkUpLeft(i - z, k - z, board, bishopIdentifier);
-        if (checkIfIsEnemy(board[i - z][k - z])) {
-            break;
-        }
-
-        checkBelowLeft(i + z, k - z, board, bishopIdentifier);
-        if (checkIfIsEnemy(board[i + z][k - z])) {
-            break;
-        }
-
-        checkBelowRight(i + z, k + z, board, bishopIdentifier);
-        if (checkIfIsEnemy(board[i + z][k + z])) {
-            break;
-        }
     }
 
+
+    for (int z = 0; z < 7; z++) {
+        if (!isOutOfBounds(i - z - 1, k - z - 1)) {
+            if (checkIfIsEnemy(board[i - z - 1][k + z - 1])) {
+                break;
+            }
+        }
+        checkUpLeft(i - z, k - z, board, bishopIdentifier);
+    }
+
+    for (int z = 0; z < 7; z++) {
+        if (!isOutOfBounds(i + z + 1, k - z - 1)) {
+            if (checkIfIsEnemy(board[i - z + 1][k + z - 1])) {
+                break;
+            }
+        }
+        checkBelowLeft(i + z, k - z, board, bishopIdentifier);
+    }
+
+    for (int z = 0; z < 7; z++) {
+        if (!isOutOfBounds(i + z, k + z)) {
+            if (checkIfIsEnemy(board[i - z][k + z])) {
+                break;
+            }
+        }
+        checkBelowRight(i + z + 1, k + z + 1, board, bishopIdentifier);
+    }
 }
 
 /**
