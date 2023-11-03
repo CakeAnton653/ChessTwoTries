@@ -23,7 +23,7 @@ void checkBelow(int cord1, int cord2, int** board, char character);
 void checkBelowLeft(int cord1, int cord2, int** board, char character);
 void checkBelowRight(int cord1, int cord2, int** board, char character);
 
-int checkEdgeCase(int cord1, int cord2);
+int isOutOfBounds(int cord1, int cord2);
 
 void checkPawnMoves(int** board);
 void checkKingMoves(int i, int k, int** board);
@@ -181,45 +181,17 @@ int main()
 }
 // TODO: Instead of iterating thru all elements for each character, go thru only once, and provide functions the table, and initial functions.
 
-
 /**
- * Evaluates wether we are in an edge case. And edge case is when a character is next to an edge, or in a corner.
- * 0 - We are not in an edge case.
- * 1 - We are in the left side upper corner (0,0)
- * 2 - We are in the left side lower corner (7,0)
- * 3 - We are in the right side upper corner (0,7)
- * 4 - We are in the right side lower corner (7, 7)
- * 5 - We are facing the edge on the left side (column = 0)
- * 6 - We are facing the edge on the right side (column = 7)
- * 7 - We are facing the edge on the upper side (row = 0)
- * 8 - We are facing the edge on the lower side (row = 7)
- * 9 - We are out of bounds, and should absolutely not be checking stuff anymore.
- * @param cord1 Cord 1 is the row. 0 - 7
- * @param cord2 Cord 2 is the column 0 - 7
- * @return If we are in an edge case, and if yes which
+ * Checks if the given square coordinates are out of bounds.
+ * @param The current row coordinate.
+ * @param The current column coordinate.
+ * @return 1 if the given coords are out of bounds, and 0 if they aren't.
  */
-int checkEdgeCase(int cord1, int cord2) {
-
-    if ((cord1 > 0 && cord1 < 7) && (cord2 > 1 && cord2 < 7)) {
-        return 0;
-    } else if (cord1 == 0 && cord2 == 0) {
+int isOutOfBounds(int cord1, int cord2) {
+    if (cord1 > 7 || cord1 < 0 || cord2 < 0 || cord2 > 7) {
         return 1;
-    } else if (cord1 == 7 && cord2 == 0) {
-        return 2;
-    } else if (cord1 == 0 && cord2 == 7) {
-        return 3;
-    } else if (cord1 == 7 && cord2 == 7) {
-        return 4;
-    } else if (cord2 == 0) {
-        return 5;
-    } else if (cord2 == 7) {
-        return 6;
-    } else if (cord1 == 0) {
-        return 7;
-    } else if (cord1 == 7) {
-        return 8;
-    } else if ((cord1 > 7 || cord1 < 0) || (cord2 < 0 || cord2 > 7)) {
-        return 9;
+    } else {
+        return 0;
     }
 
 }
@@ -233,7 +205,9 @@ int checkEdgeCase(int cord1, int cord2) {
  * 1 if any of the above are false.
  */
 int canMove(int cord1, int cord2, int** board) {
-    return board[cord1][cord2] == 0 || board[cord1][cord2] > 7;
+    if (!isOutOfBounds(cord1, cord2)) {
+        return board[cord1][cord2] == 0 || board[cord1][cord2] > 7;
+    }
 }
 
 
