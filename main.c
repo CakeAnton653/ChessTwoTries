@@ -420,12 +420,12 @@ void checkBishopMoves(int i, int k, int** board) {
     }
 
     for (int z = 0; z < 7; z++) {
-        if (!isOutOfBounds(i + z, k + z)) {
-            if (checkIfIsEnemy(board[i - z][k + z])) {
+        if (!isOutOfBounds(i + z + 1, k + z + 1)) {
+            if (checkIfIsEnemy(board[i - z + 1][k + z + 1])) {
                 break;
             }
         }
-        checkBelowRight(i + z + 1, k + z + 1, board, bishopIdentifier);
+        checkBelowRight(i + z, k + z, board, bishopIdentifier);
     }
 }
 
