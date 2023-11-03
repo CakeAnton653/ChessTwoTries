@@ -372,6 +372,16 @@ void checkAllAngles(int cord1, int cord2, int** board, char character) {
  checkBelowLeft(cord1, cord2, board, character);
 }
 
+
+/**
+ * Checks if the given character is an enemy.
+ * @param The enemy to check for.
+ * @return 1 if is an enemy, 0 if it isn't
+ */
+int checkIfIsEnemy(int character) {
+    return character > 7;
+}
+
 /**
  * Checks for all the possible moves a Bishop can make.
  * @param The 2d multidimensional array to check the moves for.
