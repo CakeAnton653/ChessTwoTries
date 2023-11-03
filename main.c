@@ -208,6 +208,8 @@ int isOutOfBounds(int cord1, int cord2) {
 int canMove(int cord1, int cord2, int** board) {
     if (!isOutOfBounds(cord1, cord2)) {
         return board[cord1][cord2] == 0 || board[cord1][cord2] > 7;
+    } else {
+        return 0;
     }
 }
 
