@@ -514,7 +514,7 @@ int checkIfIsEnemy(int character) {
 }
 
 int checkIfIsFriendly(int character) {
-    return character < 7;
+    return character < 7 && character > 0;
 }
 
 void checkKnightMoves(int i, int k, int** board) {
