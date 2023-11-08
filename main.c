@@ -534,6 +534,10 @@ void checkBishopMoves(int i, int k, int** board) {
     for (int z = 0; z < 7; z++) {
         if (!isOutOfBounds(i - z - 1, k + z + 1)) {
             if (checkIfIsEnemy(board[i - z - 1][k + z + 1]) || checkIfIsFriendly(board[i - z - 1][k + z + 1])) {
+                // Add the last enemy before exiting the angle as a potential move.
+                if (checkIfIsEnemy(board[i - z - 1][k + z + 1])) {
+                    checkUpRight(i - z, k + z, board, bishopIdentifier);
+                }
                 break;
             }
         }
@@ -543,7 +547,11 @@ void checkBishopMoves(int i, int k, int** board) {
 
     for (int z = 0; z < 7; z++) {
         if (!isOutOfBounds(i - z - 1, k - z - 1)) {
-            if (checkIfIsEnemy(board[i - z - 1][k + z - 1]) || checkIfIsFriendly(board[i - z - 1][k + z - 1])) {
+            if (checkIfIsEnemy(board[i - z - 1][k - z - 1]) || checkIfIsFriendly(board[i - z - 1][k - z - 1])) {
+                // Add the last enemy before exiting the angle as a potential move.
+                if (checkIfIsEnemy(board[i - z - 1][k - z - 1])) {
+                    checkUpLeft(i - z, k - z, board, bishopIdentifier);
+                }
                 break;
             }
         }
@@ -552,7 +560,11 @@ void checkBishopMoves(int i, int k, int** board) {
 
     for (int z = 0; z < 7; z++) {
         if (!isOutOfBounds(i + z + 1, k - z - 1)) {
-            if (checkIfIsEnemy(board[i - z + 1][k + z - 1]) || checkIfIsFriendly(board[i - z + 1][k + z - 1])) {
+            if (checkIfIsEnemy(board[i + z + 1][k - z - 1]) || checkIfIsFriendly(board[i + z + 1][k - z - 1])) {
+                // Add the last enemy before exiting the angle as a potential move.
+                if (checkIfIsEnemy(board[i + z + 1][k - z - 1])) {
+                    checkBelowLeft(i + z, k - z, board, bishopIdentifier);
+                }
                 break;
             }
         }
@@ -561,7 +573,11 @@ void checkBishopMoves(int i, int k, int** board) {
 
     for (int z = 0; z < 7; z++) {
         if (!isOutOfBounds(i + z + 1, k + z + 1)) {
-            if (checkIfIsEnemy(board[i - z + 1][k + z + 1]) || checkIfIsFriendly(board[i - z + 1][k + z + 1])) {
+            if (checkIfIsEnemy(board[i + z + 1][k + z + 1]) || checkIfIsFriendly(board[i + z + 1][k + z + 1])) {
+                // Add the last enemy before exiting the angle as a potential move.
+                if (checkIfIsEnemy(board[i + z + 1][k + z + 1])) {
+                    checkBelowLeft(i + z, k - z, board, bishopIdentifier);
+                }
                 break;
             }
         }
