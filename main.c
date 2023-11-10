@@ -576,66 +576,70 @@ void checkBishopMoves(int i, int k, int** board, char identifier) {
             if (checkIfIsEnemy(board[i + z + 1][k + z + 1]) || checkIfIsFriendly(board[i + z + 1][k + z + 1])) {
                 // Add the last enemy before exiting the angle as a potential move.
                 if (checkIfIsEnemy(board[i + z + 1][k + z + 1])) {
-                    checkBelowLeft(i + z, k - z, board, bishopIdentifier);
+                    checkBelowLeft(i + z, k - z, board, identifier);
                 }
                 break;
             }
         }
-        checkBelowRight(i + z, k + z, board, bishopIdentifier);
+        checkBelowRight(i + z, k + z, board, identifier);
     }
 }
 
-void checkRookMoves(int i, int k, int** board) {
-    char rookIdentifier = 'R';
+void checkRookMoves(int i, int k, int** board, char identifier) {
 
     for (int z = 0; z < 7; z++) {
         if (!isOutOfBounds(i - z - 1, k)) {
             if (checkIfIsEnemy(board[i - z - 1][k]) || checkIfIsFriendly(board[i - z - 1][k])) {
                 if (checkIfIsEnemy(board[i - z - 1][k])) {
-                    checkUp(i - z, k, board, rookIdentifier);
+                    checkUp(i - z, k, board, identifier);
                 }
                 break;
             }
         }
-        checkUp(i - z, k, board, rookIdentifier);
+        checkUp(i - z, k, board, identifier);
     }
 
     for (int z = 0; z < 7; z++) {
         if (!isOutOfBounds(i, k - z - 1)) {
             if (checkIfIsEnemy(board[i][k - z - 1]) || checkIfIsFriendly(board[i][k - z - 1])) {
                 if (checkIfIsEnemy(board[i][k - z - 1])) {
-                    checkLeft(i, k - z, board, rookIdentifier);
+                    checkLeft(i, k - z, board, identifier);
                 }
                 break;
             }
         }
-        checkLeft(i, k - z, board, rookIdentifier);
+        checkLeft(i, k - z, board, identifier);
     }
 
     for (int z = 0; z < 7; z++) {
         if (!isOutOfBounds(i, k + z + 1)) {
             if (checkIfIsEnemy(board[i][k + z + 1]) || checkIfIsFriendly(board[i][k + z + 1])) {
                 if (checkIfIsEnemy(board[i][k + z + 1])) {
-                    checkRight(i, k + z, board, rookIdentifier);
+                    checkRight(i, k + z, board, identifier);
                 }
                 break;
             }
         }
-        checkRight(i, k + z, board, rookIdentifier);
+        checkRight(i, k + z, board, identifier);
     }
 
     for (int z = 0; z < 7; z++) {
         if (!isOutOfBounds(i - z - 1, k)) {
             if (checkIfIsEnemy(board[i - z - 1][k]) || checkIfIsFriendly(board[i - z - 1][k])) {
                 if (checkIfIsEnemy(board[i - z - 1][k])) {
-                    checkBelow(i - z, k, board, rookIdentifier);
+                    checkBelow(i - z, k, board, identifier);
                 }
                 break;
             }
         }
-        checkBelow(i - z, k, board, rookIdentifier);
+        checkBelow(i - z, k, board, identifier);
     }
 
+}
+
+void checkQueenMoves(int i, int k, int** board, char identifier) {
+    checkBishopMoves(i, k, board, identifier);
+    checkRookMoves(i, k, board, identifier);
 }
 
 /**
@@ -644,9 +648,8 @@ void checkRookMoves(int i, int k, int** board) {
  * @param The 2d multidimensinal array to check the moves for.
  * @return Doesn't return, however adds the possible moves to the vector.
  */
-void checkKingMoves(int i, int k, int** board) {
-    char kingIdentifier = 'K';
-    checkAllAngles(i, k, board, kingIdentifier);
+void checkKingMoves(int i, int k, int** board, char identifier) {
+    checkAllAngles(i, k, board, identifier);
 }
 
 /**
