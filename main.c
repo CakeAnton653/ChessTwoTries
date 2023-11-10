@@ -591,6 +591,9 @@ void checkRookMoves(int i, int k, int** board) {
     for (int z = 0; z < 7; z++) {
         if (!isOutOfBounds(i - z - 1, k)) {
             if (checkIfIsEnemy(board[i - z - 1][k]) || checkIfIsFriendly(board[i - z - 1][k])) {
+                if (checkIfIsEnemy(board[i - z - 1][k])) {
+                    checkUp(i - z, k, board, rookIdentifier);
+                }
                 break;
             }
         }
@@ -600,6 +603,9 @@ void checkRookMoves(int i, int k, int** board) {
     for (int z = 0; z < 7; z++) {
         if (!isOutOfBounds(i, k - z - 1)) {
             if (checkIfIsEnemy(board[i][k - z - 1]) || checkIfIsFriendly(board[i][k - z - 1])) {
+                if (checkIfIsEnemy(board[i][k - z - 1])) {
+                    checkLeft(i, k - z, board, rookIdentifier);
+                }
                 break;
             }
         }
@@ -609,6 +615,9 @@ void checkRookMoves(int i, int k, int** board) {
     for (int z = 0; z < 7; z++) {
         if (!isOutOfBounds(i, k + z + 1)) {
             if (checkIfIsEnemy(board[i][k + z + 1]) || checkIfIsFriendly(board[i][k + z + 1])) {
+                if (checkIfIsEnemy(board[i][k + z + 1])) {
+                    checkRight(i, k + z, board, rookIdentifier);
+                }
                 break;
             }
         }
@@ -618,10 +627,13 @@ void checkRookMoves(int i, int k, int** board) {
     for (int z = 0; z < 7; z++) {
         if (!isOutOfBounds(i - z - 1, k)) {
             if (checkIfIsEnemy(board[i - z - 1][k]) || checkIfIsFriendly(board[i - z - 1][k])) {
+                if (checkIfIsEnemy(board[i - z - 1][k])) {
+                    checkBelow(i - z, k, board, rookIdentifier);
+                }
                 break;
             }
         }
-        checkBelow(i - z - 1, k, board, rookIdentifier);
+        checkBelow(i - z, k, board, rookIdentifier);
     }
 
 }
