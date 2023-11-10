@@ -38,6 +38,10 @@ cvector_vector_type(char*) solutionsVector = NULL;
 int main()
 {
     int** boardOfMatches = getBoardOfMatches(8, 8);
+
+    int** boardOfFriendlyMovement = getBoardOfMatches(8, 8);
+    int** boardOfEnemyMovement = getBoardOfMatches(8, 8);
+
     // 2r5/5K1P/6Pp/3R2b1/2P2k2/2p5/8/8
     // For each element in the FEN code, there can only be a max size of 8 in a line.
     // Therefore in eight columns, there are eight rows, so 8 * 8 characters max.
@@ -139,6 +143,12 @@ int main()
         token = strtok(NULL, s);
    }
 
+   // First we have to check if the king is in a mate. For this reason, we'll have to construct a table that contains only the enemy and the friendly movmements.
+   // If, at the place of the king there is an enemy movement, that means that the king is in a mate. Futhermore, since we know the value, we can trace back the path
+   // and try and block.
+
+
+
     for (int i = 0; i < 8; i++) {
         for (int k = 0; k < 8; k++) {
             switch (boardOfMatches[i][k]) {
@@ -238,12 +248,24 @@ int canMove(int cord1, int cord2, int** board) {
  * @param The character to use for the notation code.
  * @return If it's true, so the square is free, and there isn't a character of our own is standing there, it is a move, so we add it to the vector.
  */
-void checkUp(int cord1, int cord2, int** board, char character) {
-    if (canMove(cord1 - 1, cord2, board)) {
-        if (checkIfIsEnemy(board[cord1 - 1][cord2])) {
-            cvector_push_back(solutionsVector, convertToNotationCode(cord1 - 1, cord2, character, 1));
-        } else {
-            cvector_push_back(solutionsVector, convertToNotationCode(cord1 - 1, cord2, character, 0));
+void checkUp(int cord1, int cord2, int** board, char character, int areWeDrawing, int** optionalBoard) {
+    if (areWeDrawing) {
+            if (!isEnemy) {
+                        if (canMove(cord1 - 1, cord2, board)) {
+            optionalBoard[cord1 - 1][cord2] = getFriendlyMovementCode(character);
+        }
+            } else {
+                    if (canMoveFromTheOtherSide(cord1 - 1, cord2, board)) {
+            optionalBoard[cord1 - 1][cord2] = getEnemyMovementCode(character);
+        }
+            }
+    } else {
+        if (canMove(cord1 - 1, cord2, board)) {
+            if (checkIfIsEnemy(board[cord1 - 1][cord2 + 1])) {
+                cvector_push_back(solutionsVector, convertToNotationCode(cord1 - 1, cord2, character, 1));
+            } else {
+                cvector_push_back(solutionsVector, convertToNotationCode(cord1 - 1, cord2, character, 0));
+            }
         }
     }
 }
@@ -259,12 +281,24 @@ void checkUp(int cord1, int cord2, int** board, char character) {
  * @param The character to use for the notation code.
  * @return If it's true, so the square is free, and there isn't a character of our own is standing there, it is a move, so we add it to the vector.
  */
-void checkUpRight(int cord1, int cord2, int** board, char character) {
-    if (canMove(cord1 - 1, cord2 + 1, board)) {
-        if (checkIfIsEnemy(board[cord1 - 1][cord2 + 1])) {
+void checkUpRight(int cord1, int cord2, int** board, char character, int areWeDrawing, int** optionalBoard) {
+    if (areWeDraing) {
+            if (!isEnemy) {
+                        if (canMove(cord1 - 1, cord2 - 1, board)) {
+            optionalBoard[cord1 - 1][cord2 - 1] = getFriendlyMovementCode(character);
+        }
+            } else {
+                    if (canMoveFromTheOtherSide(cord1 - 1, cord2 - 1, board)) {
+            optionalBoard[cord1 - 1][cord2 - 1] = getEnemyMovementCode(character);
+        }
+            }
+    } else {
+        if (canMove(cord1 - 1, cord2 - 1, board)) {
+         if (checkIfIsEnemy(board[cord1 - 1][cord2 + 1])) {
             cvector_push_back(solutionsVector, convertToNotationCode(cord1 - 1, cord2 + 1, character, 1));
         } else {
             cvector_push_back(solutionsVector, convertToNotationCode(cord1 - 1, cord2 + 1, character, 0));
+        }
         }
     }
 }
@@ -280,12 +314,24 @@ void checkUpRight(int cord1, int cord2, int** board, char character) {
  * @param The character to use for the notation code.
  * @return If it's true, so the square is free, and there isn't a character of our own is standing there, it is a move, so we add it to the vector.
  */
-void checkUpLeft(int cord1, int cord2, int** board, char character) {
-    if (canMove(cord1 - 1, cord2 - 1, board)) {
+void checkUpLeft(int cord1, int cord2, int** board, char character, int areWeDraing, int** optionalBoard) {
+    if (areWeDrawing) {
+        if (!isEnemy) {
+                    if (canMove(cord1, cord2 - 1, board)) {
+            optionalBoard[cord1][cord2 - 1] = getFriendlyMovementCode(character);
+        }
+        } else {
+                if (canMoveFromTheOtherSide(cord1, cord2 - 1, board)) {
+            optionalBoard[cord1][cord2 - 1] = getEnemyMovementCode(character);
+            }
+        }
+    } else {
+        if (canMove(cord1, cord2 - 1, board)) {
         if (checkIfIsEnemy(board[cord1 - 1][cord2 - 1])) {
             cvector_push_back(solutionsVector, convertToNotationCode(cord1 - 1, cord2 - 1, character, 1));
         } else {
             cvector_push_back(solutionsVector, convertToNotationCode(cord1 - 1, cord2 - 1, character, 0));
+            ]
         }
     }
 }
@@ -301,12 +347,24 @@ void checkUpLeft(int cord1, int cord2, int** board, char character) {
  * @param The character to use for the notation code.
  * @return If it's true, so the square is free, and there isn't a character of our own is standing there, it is a move, so we add it to the vector.
  */
-void checkLeft(int cord1, int cord2, int** board, char character) {
-    if (canMove(cord1, cord2 - 1, board)) {
+void checkLeft(int cord1, int cord2, int** board, char character, int areWeDrawing, int** optionalBoard) {
+    if (areWeDrawing) {
+        if (!isEnemy) {
+                    if (canMove(cord1, cord2 - 1, board)) {
+            optionalBoard[cord1][cord2 - 1] = getFriendlyMovementCode(character);
+        }
+        } else {
+                if (canMoveFromTheOtherSide(cord1, cord2 - 1, board)) {
+            optionalBoard[cord1][cord2 - 1] = getEnemyMovementCode(character);
+            }
+        }
+    } else {
+        if (canMove(cord1, cord2 - 1, board)) {
         if (checkIfIsEnemy(board[cord1 - 1][cord2 + 1])) {
             cvector_push_back(solutionsVector, convertToNotationCode(cord1 - 1, cord2 + 1, character, 1));
         } else {
             cvector_push_back(solutionsVector, convertToNotationCode(cord1 - 1, cord2 + 1, character, 0));
+        }
         }
     }
 }
@@ -323,11 +381,23 @@ void checkLeft(int cord1, int cord2, int** board, char character) {
  * @return If it's true, so the square is free, and there isn't a character of our own is standing there, it is a move, so we add it to the vector.
  */
 void checkRight(int cord1, int cord2, int** board, char character) {
-    if (canMove(cord1, cord2 + 1, board)) {
+    if (areWeDrawing) {
+            if (!isEnemy) {
+                       if (canMove(cord1, cord2 + 1, board)) {
+            optionalBoard[cord1][cord2 + 1] = getFriendlyMovementCode(character);
+        }
+            } else {
+                    if (canMoveFromTheOtherSide(cord1, cord2 + 1, board)) {
+            optionalBoard[cord1][cord2 + 1] = getEnemyMovementCode(character);
+        }
+            }
+    } else {
+        if (canMove(cord1, cord2 + 1, board)) {
         if (checkIfIsEnemy(board[cord1][cord2 + 1])) {
             cvector_push_back(solutionsVector, convertToNotationCode(cord1, cord2 + 1, character, 1));
         } else {
             cvector_push_back(solutionsVector, convertToNotationCode(cord1, cord2 + 1, character, 0));
+        }
         }
     }
 }
@@ -344,11 +414,23 @@ void checkRight(int cord1, int cord2, int** board, char character) {
  * @return If it's true, so the square is free, and there isn't a character of our own is standing there, it is a move, so we add it to the vector.
  */
 void checkBelow(int cord1, int cord2, int** board, char character) {
-    if (canMove(cord1 + 1, cord2, board)) {
+    if (areWeDrawing) {
+        if (!isEnemy) {
+                   if (canMove(cord1 + 1, cord2, board)) {
+            optionalBoard[cord1 + 1][cord2] = getFriendlyMovementCode(character);
+        }
+        } else {
+                if (canMoveFromTheOtherSide(cord1 + 1, cord2, board)) {
+            optionalBoard[cord1 + 1][cord2] = getEnemyMovementCode(character);
+        }
+        }
+    } else {
+        if (canMove(cord1 + 1, cord2, board)) {
         if (checkIfIsEnemy(board[cord1 - 1][cord2])) {
             cvector_push_back(solutionsVector, convertToNotationCode(cord1 + 1, cord2, character, 1));
         } else {
             cvector_push_back(solutionsVector, convertToNotationCode(cord1 + 1, cord2, character, 0));
+        }
         }
     }
 }
@@ -365,11 +447,23 @@ void checkBelow(int cord1, int cord2, int** board, char character) {
  * @return If it's true, so the square is free, and there isn't a character of our own is standing there, it is a move, so we add it to the vector.
  */
 void checkBelowLeft(int cord1, int cord2, int** board, char character) {
-    if (canMove(cord1 + 1, cord2 - 1, board)) {
+    if (areWeDrawing) {
+            if (!isEnemy) {
+                        if (canMove(cord1 + 1, cord2 - 1, board)) {
+            optionalBoard[cord1 + 1][cord2 - 1] = getFriendlyMovementCode(character);
+        }
+            } else {
+                    if (canMoveFromTheOtherSide(cord1 + 1, cord2 - 1, board)) {
+            optionalBoard[cord1 + 1][cord2 - 1] = getEnemyMovementCode(character);
+        }
+            }
+    } else {
+        if (canMove(cord1 + 1, cord2 - 1, board)) {
         if (checkIfIsEnemy(board[cord1 + 1][cord2 - 1])) {
             cvector_push_back(solutionsVector, convertToNotationCode(cord1 + 1, cord2 - 1, character, 1));
         } else {
             cvector_push_back(solutionsVector, convertToNotationCode(cord1 + 1, cord2 - 1, character, 0));
+        }
         }
     }
 }
@@ -386,11 +480,23 @@ void checkBelowLeft(int cord1, int cord2, int** board, char character) {
  * @return If it's true, so the square is free, and there isn't a character of our own is standing there, it is a move, so we add it to the vector.
  */
 void checkBelowRight(int cord1, int cord2, int** board, char character) {
-    if (canMove(cord1 + 1, cord2 + 1, board)) {
+    if (areWeDrawing) {
+        if (!isEnemy) {
+            if (canMove(cord1 + 1, cord2 + 1, board)) {
+                optionalBoard[cord1 + 1][cord2 + 1] = getFriendlyMovementCode(character);
+            }
+        } else {
+            if (canMoveFromTheOtherSide(cord1 + 1, cord2 + 1, board)) {
+                optionalBoard[cord1 + 1][cord2 + 1] = getEnemyMovementCode(character);
+            }
+        }
+    } else {
+        if (canMove(cord1 + 1, cord2 + 1, board)) {
         if (checkIfIsEnemy(board[cord1 + 1][cord2 + 1])) {
             cvector_push_back(solutionsVector, convertToNotationCode(cord1 + 1, cord2 + 1, character, 1));
         } else {
             cvector_push_back(solutionsVector, convertToNotationCode(cord1 + 1, cord2 + 1, character, 0));
+        }
         }
     }
 }
@@ -728,9 +834,14 @@ void checkKingMoves(int i, int k, int** board, char identifier) {
  * @param The 2d multidimensinal array to check the moves for.
  * @return Doesn't return, however adds the possible moves to the vector.
  */
-void checkPawnMoves(int i, int k, int** board, char identifier) {
-    checkUpRight(i, k, board, identifier);
-    checkUpLeft(i, k, board, identifier);
+void checkPawnMoves(int i, int k, int** board, char identifier, int areWeDrawing, int** optionalBoard) {
+    if (areWeDrawing) {
+        checkUpRight(i, k, board, identifier, 1, optionalBoard);
+        checkUpLeft(i, k, board, identifier, 1, optionalBoard);
+    } else {
+        checkUpRight(i, k, board, identifier);
+        checkUpLeft(i, k, board, identifier);
+    }
 }
 
 /**
@@ -849,6 +960,79 @@ char* convertToNotationCode(int pos1, int pos2, char character, int isAHit) {
     }
 
     return solution;
+}
+
+void constructEnemyMovements(int** gameBoard, int** enemyBoard) {
+    for (int i = 0; i < 8; i++) {
+        for (int k = 0; k < 8; k++) {
+            switch (gameBoard[i][k]) {
+                case 7:
+                    checkPawnMoves(i, k, gameBoard, 'P', 1, enemyBoard);
+                    break;
+                case 6:
+                    checkKingMoves(i, k, boardOfMatches, 'K');
+                    break;
+                case 5:
+                    checkQueenMoves(i, k, boardOfMatches, 'Q');
+                    break;
+                case 4:
+                    checkBishopMoves(i, k, boardOfMatches, 'B');
+                    break;
+            case 3:
+                    checkKnightMoves(i, k, boardOfMatches, 'N');
+                    break;
+            case 2:
+                    checkRookMoves(i, k, boardOfMatches, 'R');
+                break;
+            }
+        }
+    }
+}
+
+int getFriendlyMovementCode(char character) {
+    switch (character) {
+    case 'P':
+        return 14;
+        break;
+    case 'K':
+        return 15;
+        break;
+    case 'Q':
+        return 16;
+            break;
+    case 'B':
+        return 17;
+        break;
+    case 'N':
+        return 18;
+        break;
+    case 'R':
+        return 19;
+        break;
+    }
+}
+
+int getEnemyMovementCode(char character) {
+    switch (character) {
+    case 'P':
+        return 20;
+        break;
+    case 'K':
+        return 21;
+        break;
+    case 'Q':
+        return 22;
+            break;
+    case 'B':
+        return 23;
+        break;
+    case 'N':
+        return 24;
+        break;
+    case 'R':
+        return 25;
+        break;
+    }
 }
 
 
