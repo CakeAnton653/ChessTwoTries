@@ -150,6 +150,7 @@ int main()
    // If, at the place of the king there is an enemy movement, that means that the king is in a mate. Futhermore, since we know the value, we can trace back the path
    // and try and block.
    constructEnemyMovements(boardOfMatches, boardOfFriendlyMovement);
+   construct
 
     for (int i = 0; i < 8; i++) {
         for (int k = 0; k < 8; k++) {
@@ -1040,7 +1041,7 @@ char* convertToNotationCode(int pos1, int pos2, char character, int isAHit) {
     return solution;
 }
 
-void constructEnemyMovements(int** gameBoard, int** enemyBoard) {
+void constructFriendlyMovements(int** gameBoard, int** enemyBoard) {
     for (int i = 0; i < 8; i++) {
         for (int k = 0; k < 8; k++) {
             switch (gameBoard[i][k]) {
@@ -1061,6 +1062,33 @@ void constructEnemyMovements(int** gameBoard, int** enemyBoard) {
                     break;
                 case 2:
                     checkRookMoves(i, k, gameBoard, 'R', 1, enemyBoard);
+                break;
+            }
+        }
+    }
+}
+
+void constructEnemyMovements(int** gameBoard, int** enemyBoard) {
+    for (int i = 0; i < 8; i++) {
+        for (int k = 0; k < 8; k++) {
+            switch (gameBoard[i][k]) {
+                case 8:
+                    // checkRookMoves(i, k, gameBoard, 'P', 1, enemyBoard, 1);
+                    break;
+                case 9:
+                    // checkKnightMoves(i, k, gameBoard, 'K', 1, enemyBoard, 1);
+                    break;
+                case 10:
+                    // checkBishopMoves(i, k, gameBoard, 'Q', 1, enemyBoard, 1);
+                    break;
+                case 11:
+                    // checkQueenMoves(i, k, gameBoard, 'B', 1, enemyBoard, 1);
+                    break;
+                case 12:
+                    // checkKingMoves(i, k, boardOfMatches, 'N', enemyBoard, 1);
+                    break;
+                case 13:
+                    // checkPawnMoves(i, k, gameBoard, 'R', 1, enemyBoard, 1);
                 break;
             }
         }
