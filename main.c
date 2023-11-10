@@ -12,26 +12,29 @@ int** getBoardOfMatches(int row, int column);
 
 int canMove(int cord1, int cord2, int** board);
 
-void checkUp(int cord1, int cord2, int** board, char character);
-void checkUpLeft(int cord1, int cord2, int** board, char character);
-void checkUpRight(int cord1, int cord2, int** board, char character);
+void checkUp(int cord1, int cord2, int** board, char character, int areWeDrawing, int** optionalBoard);
+void checkUpLeft(int cord1, int cord2, int** board, char character, int areWeDrawing, int** optionalBoard);
+void checkUpRight(int cord1, int cord2, int** board, char character, int areWeDrawing, int** optionalBoard);
 
-void checkLeft(int cord1, int cord2, int** board, char character);
-void checkRight(int cord1, int cord2, int** board, char character);
+void checkLeft(int cord1, int cord2, int** board, char character, int areWeDrawing, int** optionalBoard);
+void checkRight(int cord1, int cord2, int** board, char character, int areWeDrawing, int** optionalBoard);
 
-void checkBelow(int cord1, int cord2, int** board, char character);
-void checkBelowLeft(int cord1, int cord2, int** board, char character);
-void checkBelowRight(int cord1, int cord2, int** board, char character);
+void checkBelow(int cord1, int cord2, int** board, char character, int areWeDrawing, int** optionalBoard);
+void checkBelowLeft(int cord1, int cord2, int** board, char character, int areWeDrawing, int** optionalBoard);
+void checkBelowRight(int cord1, int cord2, int** board, char character, int areWeDrawing, int** optionalBoard);
 
 int isOutOfBounds(int cord1, int cord2);
 int checkIfIsEnemy(int character);
 
-void checkPawnMoves(int i, int k, int** board, char identifier);
-void checkKingMoves(int i, int k, int** board, char identifier);
-void checkBishopMoves(int i, int k, int** board, char identifier);
-void checkRookMoves(int i, int k, int** board, char identifier);
-void checkKnightMoves(int i, int k, int** board, char identifier);
-void checkQueenMoves(int i, int k, int** board, char identifier);
+void checkPawnMoves(int i, int k, int** board, char identifier, int areWeDrawing, int** optionalBoard);
+void checkKingMoves(int i, int k, int** board, char identifier, int areWeDrawing, int** optionalBoard);
+void checkBishopMoves(int i, int k, int** board, char identifier, int areWeDrawing, int** optionalBoard);
+void checkRookMoves(int i, int k, int** board, char identifier, int areWeDrawing, int** optionalBoard);
+void checkKnightMoves(int i, int k, int** board, char identifier, int areWeDrawing, int** optionalBoard);
+void checkQueenMoves(int i, int k, int** board, char identifier, int areWeDrawing, int** optionalBoard);
+
+int getFriendlyMovementCode(char character);
+int getEnemyMovementCode(char character);
 
 cvector_vector_type(char*) solutionsVector = NULL;
 
@@ -146,29 +149,28 @@ int main()
    // First we have to check if the king is in a mate. For this reason, we'll have to construct a table that contains only the enemy and the friendly movmements.
    // If, at the place of the king there is an enemy movement, that means that the king is in a mate. Futhermore, since we know the value, we can trace back the path
    // and try and block.
-
-
+   constructEnemyMovements(boardOfMatches, boardOfFriendlyMovement);
 
     for (int i = 0; i < 8; i++) {
         for (int k = 0; k < 8; k++) {
             switch (boardOfMatches[i][k]) {
                 case 7:
-                    checkPawnMoves(i, k, boardOfMatches, 'P');
+                    checkPawnMoves(i, k, boardOfMatches, 'P', 0, boardOfFriendlyMovement);
                     break;
                 case 6:
-                    checkKingMoves(i, k, boardOfMatches, 'K');
+                    checkKingMoves(i, k, boardOfMatches, 'K', 0, boardOfFriendlyMovement);
                     break;
                 case 5:
-                    checkQueenMoves(i, k, boardOfMatches, 'Q');
+                    checkQueenMoves(i, k, boardOfMatches, 'Q', 0, boardOfFriendlyMovement);
                     break;
                 case 4:
-                    checkBishopMoves(i, k, boardOfMatches, 'B');
+                    checkBishopMoves(i, k, boardOfMatches, 'B', 0, boardOfFriendlyMovement);
                     break;
             case 3:
-                    checkKnightMoves(i, k, boardOfMatches, 'N');
+                    checkKnightMoves(i, k, boardOfMatches, 'N', 0, boardOfFriendlyMovement);
                     break;
             case 2:
-                    checkRookMoves(i, k, boardOfMatches, 'R');
+                    checkRookMoves(i, k, boardOfMatches, 'R', 0, boardOfFriendlyMovement);
                 break;
             }
         }
@@ -177,6 +179,17 @@ int main()
     for(int i=0; i<8; i++) {
         for(int j=0;j<8;j++) {
             printf("%d ", boardOfMatches[i][j]);
+        if(j==7){
+            printf("\n");
+         }
+      }
+   }
+
+   printf("\n");
+
+    for(int i=0; i<8; i++) {
+        for(int j=0;j<8;j++) {
+            printf("%d ", boardOfFriendlyMovement[i][j]);
         if(j==7){
             printf("\n");
          }
@@ -200,6 +213,9 @@ int main()
 
     cvector_free(solutionsVector);
     // TODO: Free everything here.
+    free(boardOfMatches);
+    free(boardOfFriendlyMovement);
+    free(boardOfEnemyMovement);
     return 0;
 
 }
@@ -250,8 +266,12 @@ int canMove(int cord1, int cord2, int** board) {
  */
 void checkUp(int cord1, int cord2, int** board, char character, int areWeDrawing, int** optionalBoard) {
     if (areWeDrawing) {
+<<<<<<< HEAD
             if (!isEnemy) {
                         if (canMove(cord1 - 1, cord2, board)) {
+=======
+        if (canMove(cord1 - 1, cord2, board)) {
+>>>>>>> d168f23 (Continue working on the mating system)
             optionalBoard[cord1 - 1][cord2] = getFriendlyMovementCode(character);
         }
             } else {
@@ -282,10 +302,16 @@ void checkUp(int cord1, int cord2, int** board, char character, int areWeDrawing
  * @return If it's true, so the square is free, and there isn't a character of our own is standing there, it is a move, so we add it to the vector.
  */
 void checkUpRight(int cord1, int cord2, int** board, char character, int areWeDrawing, int** optionalBoard) {
+<<<<<<< HEAD
     if (areWeDraing) {
             if (!isEnemy) {
                         if (canMove(cord1 - 1, cord2 - 1, board)) {
             optionalBoard[cord1 - 1][cord2 - 1] = getFriendlyMovementCode(character);
+=======
+    if (areWeDrawing) {
+        if (canMove(cord1 - 1, cord2 + 1, board)) {
+            optionalBoard[cord1 - 1][cord2] = getFriendlyMovementCode(character);
+>>>>>>> d168f23 (Continue working on the mating system)
         }
             } else {
                     if (canMoveFromTheOtherSide(cord1 - 1, cord2 - 1, board)) {
@@ -349,6 +375,7 @@ void checkUpLeft(int cord1, int cord2, int** board, char character, int areWeDra
  */
 void checkLeft(int cord1, int cord2, int** board, char character, int areWeDrawing, int** optionalBoard) {
     if (areWeDrawing) {
+<<<<<<< HEAD
         if (!isEnemy) {
                     if (canMove(cord1, cord2 - 1, board)) {
             optionalBoard[cord1][cord2 - 1] = getFriendlyMovementCode(character);
@@ -365,6 +392,14 @@ void checkLeft(int cord1, int cord2, int** board, char character, int areWeDrawi
         } else {
             cvector_push_back(solutionsVector, convertToNotationCode(cord1 - 1, cord2 + 1, character, 0));
         }
+=======
+        if (canMove(cord1, cord2 - 1, board)) {
+            optionalBoard[cord1][cord2 - 1] = getFriendlyMovementCode(character);
+        }
+    } else {
+        if (canMove(cord1, cord2 - 1, board)) {
+            cvector_push_back(solutionsVector, convertToNotationCode(cord1, cord2 - 1, character));
+>>>>>>> d168f23 (Continue working on the mating system)
         }
     }
 }
@@ -380,6 +415,7 @@ void checkLeft(int cord1, int cord2, int** board, char character, int areWeDrawi
  * @param The character to use for the notation code.
  * @return If it's true, so the square is free, and there isn't a character of our own is standing there, it is a move, so we add it to the vector.
  */
+<<<<<<< HEAD
 void checkRight(int cord1, int cord2, int** board, char character) {
     if (areWeDrawing) {
             if (!isEnemy) {
@@ -398,6 +434,16 @@ void checkRight(int cord1, int cord2, int** board, char character) {
         } else {
             cvector_push_back(solutionsVector, convertToNotationCode(cord1, cord2 + 1, character, 0));
         }
+=======
+void checkRight(int cord1, int cord2, int** board, char character, int areWeDrawing, int** optionalBoard) {
+    if (areWeDrawing) {
+        if (canMove(cord1, cord2 + 1, board)) {
+            optionalBoard[cord1][cord2 + 1] = getEnemyMovementCode(character);
+        }
+    } else {
+        if (canMove(cord1, cord2 + 1, board)) {
+            cvector_push_back(solutionsVector, convertToNotationCode(cord1, cord2 + 1, character));
+>>>>>>> d168f23 (Continue working on the mating system)
         }
     }
 }
@@ -413,6 +459,7 @@ void checkRight(int cord1, int cord2, int** board, char character) {
  * @param The character to use for the notation code.
  * @return If it's true, so the square is free, and there isn't a character of our own is standing there, it is a move, so we add it to the vector.
  */
+<<<<<<< HEAD
 void checkBelow(int cord1, int cord2, int** board, char character) {
     if (areWeDrawing) {
         if (!isEnemy) {
@@ -431,6 +478,16 @@ void checkBelow(int cord1, int cord2, int** board, char character) {
         } else {
             cvector_push_back(solutionsVector, convertToNotationCode(cord1 + 1, cord2, character, 0));
         }
+=======
+void checkBelow(int cord1, int cord2, int** board, char character, int areWeDrawing, int** optionalBoard) {
+    if (areWeDrawing) {
+        if (canMove(cord1 + 1, cord2, board)) {
+            optionalBoard[cord1 + 1][cord2] = getFriendlyMovementCode(character);
+        }
+    } else {
+        if (canMove(cord1 + 1, cord2, board)) {
+            cvector_push_back(solutionsVector, convertToNotationCode(cord1 + 1, cord2, character));
+>>>>>>> d168f23 (Continue working on the mating system)
         }
     }
 }
@@ -446,6 +503,7 @@ void checkBelow(int cord1, int cord2, int** board, char character) {
  * @param The character to use for the notation code.
  * @return If it's true, so the square is free, and there isn't a character of our own is standing there, it is a move, so we add it to the vector.
  */
+<<<<<<< HEAD
 void checkBelowLeft(int cord1, int cord2, int** board, char character) {
     if (areWeDrawing) {
             if (!isEnemy) {
@@ -464,6 +522,16 @@ void checkBelowLeft(int cord1, int cord2, int** board, char character) {
         } else {
             cvector_push_back(solutionsVector, convertToNotationCode(cord1 + 1, cord2 - 1, character, 0));
         }
+=======
+void checkBelowLeft(int cord1, int cord2, int** board, char character, int areWeDrawing, int** optionalBoard) {
+    if (areWeDrawing) {
+        if (canMove(cord1 + 1, cord2 - 1, board)) {
+            optionalBoard[cord1 + 1][cord2 - 1] = getFriendlyMovementCode(character);
+        }
+    } else {
+        if (canMove(cord1 + 1, cord2 - 1, board)) {
+            cvector_push_back(solutionsVector, convertToNotationCode(cord1 + 1, cord2 - 1, character));
+>>>>>>> d168f23 (Continue working on the mating system)
         }
     }
 }
@@ -479,6 +547,7 @@ void checkBelowLeft(int cord1, int cord2, int** board, char character) {
  * @param The character to use for the notation code.
  * @return If it's true, so the square is free, and there isn't a character of our own is standing there, it is a move, so we add it to the vector.
  */
+<<<<<<< HEAD
 void checkBelowRight(int cord1, int cord2, int** board, char character) {
     if (areWeDrawing) {
         if (!isEnemy) {
@@ -497,6 +566,16 @@ void checkBelowRight(int cord1, int cord2, int** board, char character) {
         } else {
             cvector_push_back(solutionsVector, convertToNotationCode(cord1 + 1, cord2 + 1, character, 0));
         }
+=======
+void checkBelowRight(int cord1, int cord2, int** board, char character, int areWeDrawing, int** optionalBoard) {
+    if (areWeDrawing) {
+        if (canMove(cord1 + 1, cord2 + 1, board)) {
+            optionalBoard[cord1 + 1][cord2 + 1] = getFriendlyMovementCode(character);
+        }
+    } else {
+        if (canMove(cord1 + 1, cord2 + 1, board)) {
+            cvector_push_back(solutionsVector, convertToNotationCode(cord1 + 1, cord2 + 1, character));
+>>>>>>> d168f23 (Continue working on the mating system)
         }
     }
 }
@@ -512,15 +591,15 @@ void checkBelowRight(int cord1, int cord2, int** board, char character) {
  * @param The character to use for the notation code.
  * @return If it's true, so the square is free, and there isn't a character of our own is standing there, it is a move, so we add it to the vector.
  */
-void checkAllAngles(int cord1, int cord2, int** board, char character) {
- checkUp(cord1, cord2, board, character);
- checkUpRight(cord1, cord2, board, character);
- checkUpLeft(cord1, cord2, board, character);
- checkLeft(cord1, cord2, board, character);
- checkRight(cord1, cord2, board, character);
- checkBelow(cord1, cord2, board, character);
- checkBelowRight(cord1, cord2, board, character);
- checkBelowLeft(cord1, cord2, board, character);
+void checkAllAngles(int cord1, int cord2, int** board, char character, int areWeDrawing, int** optionalBoard) {
+ checkUp(cord1, cord2, board, character, areWeDrawing, optionalBoard);
+ checkUpRight(cord1, cord2, board, character, areWeDrawing, optionalBoard);
+ checkUpLeft(cord1, cord2, board, character, areWeDrawing, optionalBoard);
+ checkLeft(cord1, cord2, board, character, areWeDrawing, optionalBoard);
+ checkRight(cord1, cord2, board, character, areWeDrawing, optionalBoard);
+ checkBelow(cord1, cord2, board, character, areWeDrawing, optionalBoard);
+ checkBelowRight(cord1, cord2, board, character, areWeDrawing, optionalBoard);
+ checkBelowLeft(cord1, cord2, board, character, areWeDrawing, optionalBoard);
 }
 
 /**
@@ -697,7 +776,7 @@ int checkIfIsFriendly(int character) {
     return character <= 7 && character > 0;
 }
 
-void checkKnightMoves(int i, int k, int** board, char identifier) {
+void checkKnightMoves(int i, int k, int** board, char identifier, int areWeDrawing, int** optionalBoard) {
     checkAllLAround(i, k, board, identifier);
 }
 
@@ -706,19 +785,19 @@ void checkKnightMoves(int i, int k, int** board, char identifier) {
  * @param The 2d multidimensional array to check the moves for.
  * @return Doesn't return, however adds the possible moves to the vector.
  */
-void checkBishopMoves(int i, int k, int** board, char identifier) {
+void checkBishopMoves(int i, int k, int** board, char identifier, int areWeDrawing, int** optionalBoard) {
     // Had to use separate loops here due to one angle terminating resulting in closing all the other, may be open ones.
     for (int z = 0; z < 7; z++) {
         if (!isOutOfBounds(i - z - 1, k + z + 1)) {
             if (checkIfIsEnemy(board[i - z - 1][k + z + 1]) || checkIfIsFriendly(board[i - z - 1][k + z + 1])) {
                 // Add the last enemy before exiting the angle as a potential move.
                 if (checkIfIsEnemy(board[i - z - 1][k + z + 1])) {
-                    checkUpRight(i - z, k + z, board, identifier);
+                    checkUpRight(i - z, k + z, board, identifier, areWeDrawing, optionalBoard);
                 }
                 break;
             }
         }
-        checkUpRight(i - z, k + z, board, identifier);
+        checkUpRight(i - z, k + z, board, identifier, areWeDrawing, optionalBoard);
     }
 
 
@@ -727,12 +806,12 @@ void checkBishopMoves(int i, int k, int** board, char identifier) {
             if (checkIfIsEnemy(board[i - z - 1][k - z - 1]) || checkIfIsFriendly(board[i - z - 1][k - z - 1])) {
                 // Add the last enemy before exiting the angle as a potential move.
                 if (checkIfIsEnemy(board[i - z - 1][k - z - 1])) {
-                    checkUpLeft(i - z, k - z, board, identifier);
+                    checkUpLeft(i - z, k - z, board, identifier, areWeDrawing, optionalBoard);
                 }
                 break;
             }
         }
-        checkUpLeft(i - z, k - z, board, identifier);
+        checkUpLeft(i - z, k - z, board, identifier, areWeDrawing, optionalBoard);
     }
 
     for (int z = 0; z < 7; z++) {
@@ -740,12 +819,12 @@ void checkBishopMoves(int i, int k, int** board, char identifier) {
             if (checkIfIsEnemy(board[i + z + 1][k - z - 1]) || checkIfIsFriendly(board[i + z + 1][k - z - 1])) {
                 // Add the last enemy before exiting the angle as a potential move.
                 if (checkIfIsEnemy(board[i + z + 1][k - z - 1])) {
-                    checkBelowLeft(i + z, k - z, board, identifier);
+                    checkBelowLeft(i + z, k - z, board, identifier, areWeDrawing, optionalBoard);
                 }
                 break;
             }
         }
-        checkBelowLeft(i + z, k - z, board, identifier);
+        checkBelowLeft(i + z, k - z, board, identifier, areWeDrawing, optionalBoard);
     }
 
     for (int z = 0; z < 7; z++) {
@@ -753,70 +832,74 @@ void checkBishopMoves(int i, int k, int** board, char identifier) {
             if (checkIfIsEnemy(board[i + z + 1][k + z + 1]) || checkIfIsFriendly(board[i + z + 1][k + z + 1])) {
                 // Add the last enemy before exiting the angle as a potential move.
                 if (checkIfIsEnemy(board[i + z + 1][k + z + 1])) {
+<<<<<<< HEAD
                     checkBelowRight(i + z, k - z, board, identifier);
+=======
+                    checkBelowLeft(i + z, k - z, board, identifier, areWeDrawing, optionalBoard);
+>>>>>>> d168f23 (Continue working on the mating system)
                 }
                 break;
             }
         }
-        checkBelowRight(i + z, k + z, board, identifier);
+        checkBelowRight(i + z, k + z, board, identifier, areWeDrawing, optionalBoard);
     }
 }
 
-void checkRookMoves(int i, int k, int** board, char identifier) {
+void checkRookMoves(int i, int k, int** board, char identifier, int areWeDrawing, int** optionalBoard) {
 
     for (int z = 0; z < 7; z++) {
         if (!isOutOfBounds(i - z - 1, k)) {
             if (checkIfIsEnemy(board[i - z - 1][k]) || checkIfIsFriendly(board[i - z - 1][k])) {
                 if (checkIfIsEnemy(board[i - z - 1][k])) {
-                    checkUp(i - z, k, board, identifier);
+                    checkUp(i - z, k, board, identifier, areWeDrawing, optionalBoard);
                 }
                 break;
             }
         }
-        checkUp(i - z, k, board, identifier);
+        checkUp(i - z, k, board, identifier, 0, board);
     }
 
     for (int z = 0; z < 7; z++) {
         if (!isOutOfBounds(i, k - z - 1)) {
             if (checkIfIsEnemy(board[i][k - z - 1]) || checkIfIsFriendly(board[i][k - z - 1])) {
                 if (checkIfIsEnemy(board[i][k - z - 1])) {
-                    checkLeft(i, k - z, board, identifier);
+                    checkLeft(i, k - z, board, identifier, areWeDrawing, optionalBoard);
                 }
                 break;
             }
         }
-        checkLeft(i, k - z, board, identifier);
+        checkLeft(i, k - z, board, identifier, areWeDrawing, optionalBoard);
     }
 
     for (int z = 0; z < 7; z++) {
         if (!isOutOfBounds(i, k + z + 1)) {
             if (checkIfIsEnemy(board[i][k + z + 1]) || checkIfIsFriendly(board[i][k + z + 1])) {
                 if (checkIfIsEnemy(board[i][k + z + 1])) {
-                    checkRight(i, k + z, board, identifier);
+                    checkRight(i, k + z, board, identifier, areWeDrawing, optionalBoard);
                 }
                 break;
             }
         }
-        checkRight(i, k + z, board, identifier);
+        checkRight(i, k + z, board, identifier, areWeDrawing, optionalBoard);
     }
 
     for (int z = 0; z < 7; z++) {
         if (!isOutOfBounds(i - z - 1, k)) {
             if (checkIfIsEnemy(board[i - z - 1][k]) || checkIfIsFriendly(board[i - z - 1][k])) {
                 if (checkIfIsEnemy(board[i - z - 1][k])) {
-                    checkBelow(i - z, k, board, identifier);
+                    checkBelow(i - z, k, board, identifier, areWeDrawing, optionalBoard);
                 }
                 break;
             }
         }
-        checkBelow(i - z, k, board, identifier);
+        checkBelow(i - z, k, board, identifier, areWeDrawing, optionalBoard);
     }
 
 }
 
-void checkQueenMoves(int i, int k, int** board, char identifier) {
-    checkBishopMoves(i, k, board, identifier);
-    checkRookMoves(i, k, board, identifier);
+void checkQueenMoves(int i, int k, int** board, char identifier, int areWeDrawing, int** optionalBoard) {
+    checkBishopMoves(i, k, board, identifier, areWeDrawing, optionalBoard);
+    checkRookMoves(i, k, board, identifier, areWeDrawing, optionalBoard);
 }
 
 /**
@@ -825,8 +908,8 @@ void checkQueenMoves(int i, int k, int** board, char identifier) {
  * @param The 2d multidimensinal array to check the moves for.
  * @return Doesn't return, however adds the possible moves to the vector.
  */
-void checkKingMoves(int i, int k, int** board, char identifier) {
-    checkAllAngles(i, k, board, identifier);
+void checkKingMoves(int i, int k, int** board, char identifier, int areWeDrawing, int** optionalBoard) {
+    checkAllAngles(i, k, board, identifier, areWeDrawing, optionalBoard);
 }
 
 /**
@@ -835,13 +918,8 @@ void checkKingMoves(int i, int k, int** board, char identifier) {
  * @return Doesn't return, however adds the possible moves to the vector.
  */
 void checkPawnMoves(int i, int k, int** board, char identifier, int areWeDrawing, int** optionalBoard) {
-    if (areWeDrawing) {
-        checkUpRight(i, k, board, identifier, 1, optionalBoard);
-        checkUpLeft(i, k, board, identifier, 1, optionalBoard);
-    } else {
-        checkUpRight(i, k, board, identifier);
-        checkUpLeft(i, k, board, identifier);
-    }
+    checkUpRight(i, k, board, identifier, areWeDrawing, optionalBoard);
+    checkUpLeft(i, k, board, identifier, areWeDrawing, optionalBoard);
 }
 
 /**
@@ -970,19 +1048,19 @@ void constructEnemyMovements(int** gameBoard, int** enemyBoard) {
                     checkPawnMoves(i, k, gameBoard, 'P', 1, enemyBoard);
                     break;
                 case 6:
-                    checkKingMoves(i, k, boardOfMatches, 'K');
+                    checkKingMoves(i, k, gameBoard, 'K', 1, enemyBoard);
                     break;
                 case 5:
-                    checkQueenMoves(i, k, boardOfMatches, 'Q');
+                    checkQueenMoves(i, k, gameBoard, 'Q', 1, enemyBoard);
                     break;
                 case 4:
-                    checkBishopMoves(i, k, boardOfMatches, 'B');
+                    checkBishopMoves(i, k, gameBoard, 'B', 1, enemyBoard);
                     break;
-            case 3:
-                    checkKnightMoves(i, k, boardOfMatches, 'N');
+                case 3:
+                    // checkKnightMoves(i, k, boardOfMatches, 'N');
                     break;
-            case 2:
-                    checkRookMoves(i, k, boardOfMatches, 'R');
+                case 2:
+                    checkRookMoves(i, k, gameBoard, 'R', 1, enemyBoard);
                 break;
             }
         }
