@@ -150,31 +150,58 @@ int main()
    // First we have to check if the king is in a mate. For this reason, we'll have to construct a table that contains only the enemy and the friendly movmements.
    // If, at the place of the king there is an enemy movement, that means that the king is in a mate. Futhermore, since we know the value, we can trace back the path
    // and try and block.
+   int isTheKingInMate = 0;
+   int kingRow = 0;
+   int kingColumn = 0;
 
-    for (int i = 0; i < 8; i++) {
+   for (int i = 0; i < 7; i++) {
+    for (int k = 0; k < 7; k++) {
+        switch(boardOfMatches[i][k]) {
+        case 6:
+            if (boardOfEnemyMovement[i][k] > 19) {
+                isTheKingInMate = 1;
+                kingRow = i;
+                kingColumn = k;
+            }
+            break;
+        }
+    }
+   }
+
+   if (!isTheKingInMate) {
+       for (int i = 0; i < 8; i++) {
         for (int k = 0; k < 8; k++) {
             switch (boardOfMatches[i][k]) {
                 case 7:
-                    checkPawnMoves(i, k, boardOfMatches, 'P', 0, boardOfFriendlyMovement, 0);
+                    checkPawnMoves(i, k, boardOfMatches, 'P', 0, boardOfMatches, 0);
                     break;
                 case 6:
-                    checkKingMoves(i, k, boardOfMatches, 'K', 0, boardOfFriendlyMovement, 0);
+                    checkKingMoves(i, k, boardOfMatches, 'K', 0, boardOfMatches, 0);
                     break;
                 case 5:
-                    checkQueenMoves(i, k, boardOfMatches, 'Q', 0, boardOfFriendlyMovement, 0);
+                    checkQueenMoves(i, k, boardOfMatches, 'Q', 0, boardOfMatches, 0);
                     break;
                 case 4:
-                    checkBishopMoves(i, k, boardOfMatches, 'B', 0, boardOfFriendlyMovement, 0);
+                    checkBishopMoves(i, k, boardOfMatches, 'B', 0, boardOfMatches, 0);
                     break;
             case 3:
-                    checkKnightMoves(i, k, boardOfMatches, 'N', 0, boardOfFriendlyMovement, 0);
+                    checkKnightMoves(i, k, boardOfMatches, 'N', 0, boardOfMatches, 0);
                     break;
             case 2:
-                    checkRookMoves(i, k, boardOfMatches, 'R', 0, boardOfFriendlyMovement, 0);
+                    checkRookMoves(i, k, boardOfMatches, 'R', 0, boardOfMatches, 0);
                 break;
             }
         }
     }
+   } else {
+    // Check if there are any free squares.
+    // If not, check if we can move a character in the way.
+    checkAllAngles(kingRow, kingColumn, boardOfMatches, 'K', 0, boardOfMatches, 0);
+
+    if (cvector_size(solutionsVector) == 0) {
+        // We didn't find an empty square to move to, so time to see if we can move into a square with a character.
+    }
+   }
 
     constructFriendlyMovements(boardOfMatches, boardOfFriendlyMovement);
     constructEnemyMovements(boardOfMatches, boardOfEnemyMovement);
@@ -835,7 +862,7 @@ int checkIfIsFriendly(int character) {
 }
 
 int checkIfIsEnemyFromTheOtherSide(int character) {
-    return character < 8 && character > 0;
+    return character <= 7 && character > 0;
 }
 
 int checkIfIsFriendlyFromTheOtherSide(int character) {
@@ -872,7 +899,7 @@ void checkBishopMoves(int i, int k, int** board, char identifier, int areWeDrawi
         if (!isOutOfBounds(i - z - 1, k - z - 1)) {
             if (checkIfIsEnemyFromTheOtherSide(board[i - z - 1][k - z - 1]) || checkIfIsFriendlyFromTheOtherSide(board[i - z - 1][k - z - 1])) {
                 // Add the last enemy before exiting the angle as a potential move.
-                if (checkIfIsEnemy(board[i - z - 1][k - z - 1])) {
+                if (checkIfIsEnemyFromTheOtherSide(board[i - z - 1][k - z - 1])) {
                     checkUpLeft(i - z, k - z, board, identifier, areWeDrawing, optionalBoard, isEnemy);
                 }
                 break;
@@ -885,7 +912,7 @@ void checkBishopMoves(int i, int k, int** board, char identifier, int areWeDrawi
         if (!isOutOfBounds(i + z + 1, k - z - 1)) {
             if (checkIfIsEnemyFromTheOtherSide(board[i + z + 1][k - z - 1]) || checkIfIsFriendlyFromTheOtherSide(board[i + z + 1][k - z - 1])) {
                 // Add the last enemy before exiting the angle as a potential move.
-                if (checkIfIsEnemy(board[i + z + 1][k - z - 1])) {
+                if (checkIfIsEnemyFromTheOtherSide(board[i + z + 1][k - z - 1])) {
                     checkBelowLeft(i + z, k - z, board, identifier, areWeDrawing, optionalBoard, isEnemy);
                 }
                 break;
@@ -898,7 +925,7 @@ void checkBishopMoves(int i, int k, int** board, char identifier, int areWeDrawi
         if (!isOutOfBounds(i + z + 1, k + z + 1)) {
             if (checkIfIsEnemyFromTheOtherSide(board[i + z + 1][k + z + 1]) || checkIfIsFriendlyFromTheOtherSide(board[i + z + 1][k + z + 1])) {
                 // Add the last enemy before exiting the angle as a potential move.
-                if (checkIfIsEnemy(board[i + z + 1][k + z + 1])) {
+                if (checkIfIsEnemyFromTheOtherSide(board[i + z + 1][k + z + 1])) {
                     checkBelowLeft(i + z, k - z, board, identifier, areWeDrawing, optionalBoard, isEnemy);
                 }
                 break;
@@ -973,9 +1000,12 @@ void checkRookMoves(int i, int k, int** board, char identifier, int areWeDrawing
                     checkUp(i - z, k, board, identifier, areWeDrawing, optionalBoard, isEnemy);
                 }
                 break;
+            } else {
+                checkUp(i - z, k, board, identifier, areWeDrawing, optionalBoard, isEnemy);
             }
+        } else {
+            break;
         }
-        checkUp(i - z, k, board, identifier, areWeDrawing, optionalBoard, isEnemy);
     }
 
     for (int z = 0; z < 7; z++) {
@@ -985,9 +1015,12 @@ void checkRookMoves(int i, int k, int** board, char identifier, int areWeDrawing
                     checkLeft(i, k - z, board, identifier, areWeDrawing, optionalBoard, isEnemy);
                 }
                 break;
+            } else {
+                checkLeft(i, k - z, board, identifier, areWeDrawing, optionalBoard, isEnemy);
             }
+        } else {
+            break;
         }
-        checkLeft(i, k - z, board, identifier, areWeDrawing, optionalBoard, isEnemy);
     }
 
     for (int z = 0; z < 7; z++) {
@@ -998,8 +1031,10 @@ void checkRookMoves(int i, int k, int** board, char identifier, int areWeDrawing
                 }
                 break;
             }
+             checkRight(i, k + z, board, identifier, areWeDrawing, optionalBoard, isEnemy);
+        } else {
+            break;
         }
-        checkRight(i, k + z, board, identifier, areWeDrawing, optionalBoard, isEnemy);
     }
 
     for (int z = 0; z < 7; z++) {
@@ -1009,9 +1044,12 @@ void checkRookMoves(int i, int k, int** board, char identifier, int areWeDrawing
                     checkBelow(i - z, k, board, identifier, areWeDrawing, optionalBoard, isEnemy);
                 }
                 break;
+            } else {
+                checkBelow(i - z, k, board, identifier, areWeDrawing, optionalBoard, isEnemy);
             }
+        } else {
+            break;
         }
-        checkBelow(i - z, k, board, identifier, areWeDrawing, optionalBoard, isEnemy);
     }
     } else {
        for (int z = 0; z < 7; z++) {
@@ -1021,9 +1059,12 @@ void checkRookMoves(int i, int k, int** board, char identifier, int areWeDrawing
                     checkUp(i - z, k, board, identifier, areWeDrawing, optionalBoard, isEnemy);
                 }
                 break;
+            } else {
+                checkUp(i - z, k, board, identifier, areWeDrawing, optionalBoard, isEnemy);
             }
+        } else {
+            break;
         }
-        checkUp(i - z, k, board, identifier, areWeDrawing, optionalBoard, isEnemy);
     }
 
     for (int z = 0; z < 7; z++) {
@@ -1033,9 +1074,12 @@ void checkRookMoves(int i, int k, int** board, char identifier, int areWeDrawing
                     checkLeft(i, k - z, board, identifier, areWeDrawing, optionalBoard, isEnemy);
                 }
                 break;
+            } else {
+                checkLeft(i, k - z, board, identifier, areWeDrawing, optionalBoard, isEnemy);
             }
+        } else {
+            break;
         }
-        checkLeft(i, k - z, board, identifier, areWeDrawing, optionalBoard, isEnemy);
     }
 
     for (int z = 0; z < 7; z++) {
@@ -1045,9 +1089,12 @@ void checkRookMoves(int i, int k, int** board, char identifier, int areWeDrawing
                     checkRight(i, k + z, board, identifier, areWeDrawing, optionalBoard, isEnemy);
                 }
                 break;
+            } else {
+                checkRight(i, k + z, board, identifier, areWeDrawing, optionalBoard, isEnemy);
             }
+        } else {
+            break;
         }
-        checkRight(i, k + z, board, identifier, areWeDrawing, optionalBoard, isEnemy);
     }
 
     for (int z = 0; z < 7; z++) {
@@ -1057,9 +1104,12 @@ void checkRookMoves(int i, int k, int** board, char identifier, int areWeDrawing
                     checkBelow(i - z, k, board, identifier, areWeDrawing, optionalBoard, isEnemy);
                 }
                 break;
+            } else {
+                checkBelow(i - z, k, board, identifier, areWeDrawing, optionalBoard, isEnemy);
             }
+        } else {
+            break;
         }
-        checkBelow(i - z, k, board, identifier, areWeDrawing, optionalBoard, isEnemy);
     }
     }
 
