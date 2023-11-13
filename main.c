@@ -7,7 +7,7 @@
 
 #include "cvector.h"
 
-const char* convertToNotationCode(int pos1, int pos2, char character);
+char* convertToNotationCode(int pos1, int pos2, char character, int isAHit);
 int** getBoardOfMatches(int row, int column);
 
 int canMove(int cord1, int cord2, int** board);
@@ -181,6 +181,13 @@ int main()
 		}
 	}
 
+    if (solutionsVector) {
+		size_t i;
+		for (i = 0; i < cvector_size(solutionsVector); ++i) {
+			free(solutionsVector[i]);
+		}
+	}
+
     cvector_free(solutionsVector);
     // TODO: Free everything here.
     return 0;
@@ -233,7 +240,11 @@ int canMove(int cord1, int cord2, int** board) {
  */
 void checkUp(int cord1, int cord2, int** board, char character) {
     if (canMove(cord1 - 1, cord2, board)) {
-        cvector_push_back(solutionsVector, convertToNotationCode(cord1 - 1, cord2, character));
+        if (checkIfIsEnemy(board[cord1 - 1][cord2])) {
+            cvector_push_back(solutionsVector, convertToNotationCode(cord1 - 1, cord2, character, 1));
+        } else {
+            cvector_push_back(solutionsVector, convertToNotationCode(cord1 - 1, cord2, character, 0));
+        }
     }
 }
 
@@ -250,7 +261,11 @@ void checkUp(int cord1, int cord2, int** board, char character) {
  */
 void checkUpRight(int cord1, int cord2, int** board, char character) {
     if (canMove(cord1 - 1, cord2 + 1, board)) {
-        cvector_push_back(solutionsVector, convertToNotationCode(cord1 - 1, cord2 + 1, character));
+        if (checkIfIsEnemy(board[cord1 - 1][cord2 + 1])) {
+            cvector_push_back(solutionsVector, convertToNotationCode(cord1 - 1, cord2 + 1, character, 1));
+        } else {
+            cvector_push_back(solutionsVector, convertToNotationCode(cord1 - 1, cord2 + 1, character, 0));
+        }
     }
 }
 
@@ -267,7 +282,11 @@ void checkUpRight(int cord1, int cord2, int** board, char character) {
  */
 void checkUpLeft(int cord1, int cord2, int** board, char character) {
     if (canMove(cord1 - 1, cord2 - 1, board)) {
-        cvector_push_back(solutionsVector, convertToNotationCode(cord1 - 1, cord2 - 1, character));
+        if (checkIfIsEnemy(board[cord1 - 1][cord2 - 1])) {
+            cvector_push_back(solutionsVector, convertToNotationCode(cord1 - 1, cord2 - 1, character, 1));
+        } else {
+            cvector_push_back(solutionsVector, convertToNotationCode(cord1 - 1, cord2 - 1, character, 0));
+        }
     }
 }
 
@@ -284,7 +303,11 @@ void checkUpLeft(int cord1, int cord2, int** board, char character) {
  */
 void checkLeft(int cord1, int cord2, int** board, char character) {
     if (canMove(cord1, cord2 - 1, board)) {
-        cvector_push_back(solutionsVector, convertToNotationCode(cord1, cord2 - 1, character));
+        if (checkIfIsEnemy(board[cord1 - 1][cord2 + 1])) {
+            cvector_push_back(solutionsVector, convertToNotationCode(cord1 - 1, cord2 + 1, character, 1));
+        } else {
+            cvector_push_back(solutionsVector, convertToNotationCode(cord1 - 1, cord2 + 1, character, 0));
+        }
     }
 }
 
@@ -301,7 +324,11 @@ void checkLeft(int cord1, int cord2, int** board, char character) {
  */
 void checkRight(int cord1, int cord2, int** board, char character) {
     if (canMove(cord1, cord2 + 1, board)) {
-        cvector_push_back(solutionsVector, convertToNotationCode(cord1, cord2 + 1, character));
+        if (checkIfIsEnemy(board[cord1][cord2 + 1])) {
+            cvector_push_back(solutionsVector, convertToNotationCode(cord1, cord2 + 1, character, 1));
+        } else {
+            cvector_push_back(solutionsVector, convertToNotationCode(cord1, cord2 + 1, character, 0));
+        }
     }
 }
 
@@ -318,7 +345,11 @@ void checkRight(int cord1, int cord2, int** board, char character) {
  */
 void checkBelow(int cord1, int cord2, int** board, char character) {
     if (canMove(cord1 + 1, cord2, board)) {
-        cvector_push_back(solutionsVector, convertToNotationCode(cord1 + 1, cord2, character));
+        if (checkIfIsEnemy(board[cord1 - 1][cord2])) {
+            cvector_push_back(solutionsVector, convertToNotationCode(cord1 + 1, cord2, character, 1));
+        } else {
+            cvector_push_back(solutionsVector, convertToNotationCode(cord1 + 1, cord2, character, 0));
+        }
     }
 }
 
@@ -335,7 +366,11 @@ void checkBelow(int cord1, int cord2, int** board, char character) {
  */
 void checkBelowLeft(int cord1, int cord2, int** board, char character) {
     if (canMove(cord1 + 1, cord2 - 1, board)) {
-        cvector_push_back(solutionsVector, convertToNotationCode(cord1 + 1, cord2 - 1, character));
+        if (checkIfIsEnemy(board[cord1 + 1][cord2 - 1])) {
+            cvector_push_back(solutionsVector, convertToNotationCode(cord1 + 1, cord2 - 1, character, 1));
+        } else {
+            cvector_push_back(solutionsVector, convertToNotationCode(cord1 + 1, cord2 - 1, character, 0));
+        }
     }
 }
 
@@ -352,7 +387,11 @@ void checkBelowLeft(int cord1, int cord2, int** board, char character) {
  */
 void checkBelowRight(int cord1, int cord2, int** board, char character) {
     if (canMove(cord1 + 1, cord2 + 1, board)) {
-        cvector_push_back(solutionsVector, convertToNotationCode(cord1 + 1, cord2 + 1, character));
+        if (checkIfIsEnemy(board[cord1 + 1][cord2 + 1])) {
+            cvector_push_back(solutionsVector, convertToNotationCode(cord1 + 1, cord2 + 1, character, 1));
+        } else {
+            cvector_push_back(solutionsVector, convertToNotationCode(cord1 + 1, cord2 + 1, character, 0));
+        }
     }
 }
 
@@ -388,7 +427,11 @@ void checkAllAngles(int cord1, int cord2, int** board, char character) {
  */
 void checkBelowLLeft(int cord1, int cord2, int** board, char character) {
     if (canMove(cord1 + 2, cord2 - 1, board)) {
-        cvector_push_back(solutionsVector, convertToNotationCode(cord1 + 3, cord2 - 1, character));
+        if (checkIfIsEnemy(board[cord1 + 2][cord2 - 1])) {
+            cvector_push_back(solutionsVector, convertToNotationCode(cord1 + 2, cord2 - 1, character, 1));
+        } else {
+            cvector_push_back(solutionsVector, convertToNotationCode(cord1 + 2, cord2 - 1, character, 0));
+        }
     }
 }
 
@@ -401,7 +444,11 @@ void checkBelowLLeft(int cord1, int cord2, int** board, char character) {
  */
 void checkBelowLRight(int cord1, int cord2, int** board, char character) {
     if (canMove(cord1 + 2, cord2 + 1, board)) {
-        cvector_push_back(solutionsVector, convertToNotationCode(cord1 + 2, cord2 + 1, character));
+        if (checkIfIsEnemy(board[cord1 + 2][cord2 + 1])) {
+            cvector_push_back(solutionsVector, convertToNotationCode(cord1 + 2, cord2 + 2, character, 1));
+        } else {
+            cvector_push_back(solutionsVector, convertToNotationCode(cord1 + 2, cord2 + 2, character, 0));
+        }
     }
 }
 
@@ -414,7 +461,11 @@ void checkBelowLRight(int cord1, int cord2, int** board, char character) {
  */
 void checkRightLUp(int cord1, int cord2, int** board, char character) {
     if (canMove(cord1 + 1, cord2 + 2, board)) {
-        cvector_push_back(solutionsVector, convertToNotationCode(cord1 + 1, cord2 + 2, character));
+        if (checkIfIsEnemy(board[cord1 + 1][cord2 + 2])) {
+            cvector_push_back(solutionsVector, convertToNotationCode(cord1 + 1, cord2 + 2, character, 1));
+        } else {
+            cvector_push_back(solutionsVector, convertToNotationCode(cord1 + 1, cord2 + 2, character, 0));
+        }
     }
 }
 
@@ -427,7 +478,11 @@ void checkRightLUp(int cord1, int cord2, int** board, char character) {
  */
 void checkRightLBelow(int cord1, int cord2, int** board, char character) {
     if (canMove(cord1 - 1, cord2 + 2, board)) {
-        cvector_push_back(solutionsVector, convertToNotationCode(cord1 - 1, cord2 + 2, character));
+        if (checkIfIsEnemy(board[cord1 - 1][cord2 + 2])) {
+            cvector_push_back(solutionsVector, convertToNotationCode(cord1 - 1, cord2 + 2, character, 1));
+        } else {
+            cvector_push_back(solutionsVector, convertToNotationCode(cord1 - 1, cord2 + 2, character, 0));
+        }
     }
 }
 
@@ -440,7 +495,11 @@ void checkRightLBelow(int cord1, int cord2, int** board, char character) {
  */
 void checkLeftLUp(int cord1, int cord2, int** board, char character) {
     if (canMove(cord1 - 1, cord2 - 2, board)) {
-        cvector_push_back(solutionsVector, convertToNotationCode(cord1 - 1, cord2 - 2, character));
+        if (checkIfIsEnemy(board[cord1 - 1][cord2 - 2])) {
+            cvector_push_back(solutionsVector, convertToNotationCode(cord1 - 1, cord2 - 2, character, 1));
+        } else {
+            cvector_push_back(solutionsVector, convertToNotationCode(cord1 - 1, cord2 - 2, character, 0));
+        }
     }
 }
 
@@ -453,7 +512,11 @@ void checkLeftLUp(int cord1, int cord2, int** board, char character) {
  */
 void checkLeftLBelow(int cord1, int cord2, int** board, char character) {
     if (canMove(cord1 + 1, cord2 - 2, board)) {
-        cvector_push_back(solutionsVector, convertToNotationCode(cord1 + 1, cord2 - 2, character));
+        if (checkIfIsEnemy(board[cord1 + 1][cord2 - 2])) {
+            cvector_push_back(solutionsVector, convertToNotationCode(cord1 + 1, cord2 - 2, character, 1));
+        } else {
+            cvector_push_back(solutionsVector, convertToNotationCode(cord1 + 1, cord2 - 2, character, 0));
+        }
     }
 }
 
@@ -466,7 +529,11 @@ void checkLeftLBelow(int cord1, int cord2, int** board, char character) {
  */
 void checkUpLRight(int cord1, int cord2, int** board, char character) {
     if (canMove(cord1 - 2, cord2 + 1, board)) {
-        cvector_push_back(solutionsVector, convertToNotationCode(cord1 - 2, cord2 + 1, character));
+        if (checkIfIsEnemy(board[cord1 - 2][cord2 + 1])) {
+            cvector_push_back(solutionsVector, convertToNotationCode(cord1 - 2, cord2 + 1, character, 1));
+        } else {
+            cvector_push_back(solutionsVector, convertToNotationCode(cord1 - 2, cord2 + 1, character, 0));
+        }
     }
 }
 
@@ -479,7 +546,11 @@ void checkUpLRight(int cord1, int cord2, int** board, char character) {
  */
 void checkUpLLeft(int cord1, int cord2, int** board, char character) {
     if (canMove(cord1 - 2, cord2 - 1, board)) {
-        cvector_push_back(solutionsVector, convertToNotationCode(cord1 - 2, cord2 - 1, character));
+        if (checkIfIsEnemy(board[cord1 - 2][cord2 - 1])) {
+            cvector_push_back(solutionsVector, convertToNotationCode(cord1 - 2, cord2 - 1, character, 1));
+        } else {
+            cvector_push_back(solutionsVector, convertToNotationCode(cord1 - 2, cord2 - 1, character, 0));
+        }
     }
 }
 // TODO: FIxup docs for horse related functions.
@@ -576,7 +647,7 @@ void checkBishopMoves(int i, int k, int** board, char identifier) {
             if (checkIfIsEnemy(board[i + z + 1][k + z + 1]) || checkIfIsFriendly(board[i + z + 1][k + z + 1])) {
                 // Add the last enemy before exiting the angle as a potential move.
                 if (checkIfIsEnemy(board[i + z + 1][k + z + 1])) {
-                    checkBelowLeft(i + z, k - z, board, identifier);
+                    checkBelowRight(i + z, k - z, board, identifier);
                 }
                 break;
             }
@@ -689,9 +760,10 @@ int** getBoardOfMatches(int row, int column) {
  * @param The character to construct the notation code for.
  * @return A char* containing the algebratic notation code.
  */
-const char* convertToNotationCode(int pos1, int pos2, char character) {
+char* convertToNotationCode(int pos1, int pos2, char character, int isAHit) {
     char pos2char;
     char numberAsChar;
+    char isAHitCharacter;
 
     switch (pos2) {
         case 0:
@@ -748,11 +820,33 @@ const char* convertToNotationCode(int pos1, int pos2, char character) {
 
     };
 
-    char *solution;
+    isAHitCharacter = '+';
 
-    solution = (char *)calloc(4, sizeof(char));
+    // Hopefully this doesn't leak, a freeing the vector will free these as well.
+    char* solution = malloc(5 * sizeof(char));
 
-    sprintf(solution, "%c%c%c", character, pos2char, numberAsChar);
+    // This is stupid, but there is no empty char in C so I have to use conditional logic.
+    if (character == 'P') {
+        if (isAHit) {
+            solution[0] = isAHitCharacter;
+            solution[1] = pos2char;
+            solution[2] = numberAsChar;
+        } else {
+            solution[0] = pos2char;
+            solution[1] = numberAsChar;
+        }
+    } else {
+        if (isAHit) {
+            solution[0] = character;
+            solution[1] = isAHitCharacter;
+            solution[2] = pos2char;
+            solution[3] = numberAsChar;
+        } else {
+            solution[0] = character;
+            solution[1] = pos2char;
+            solution[2] = numberAsChar;
+        }
+    }
 
     return solution;
 }
